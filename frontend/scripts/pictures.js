@@ -18,7 +18,7 @@ async function getPics() {
 
 async function checkConnection() {
   try {
-    const response = await fetch("http://backend:3000/api/check");
+    const response = await fetch("/api/check");
     const data = await response.json();
     const responseFromApi = data;
     showFeedback(responseFromApi);

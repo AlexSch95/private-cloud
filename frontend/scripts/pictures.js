@@ -19,6 +19,7 @@ async function getPics() {
 async function checkConnection() {
   try {
     const response = await fetch("/api/check");
+    console.log(response);
     const data = await response.json();
     const responseFromApi = data;
     showFeedback(responseFromApi);

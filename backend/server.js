@@ -31,7 +31,10 @@ try {
         message: "Verbindung zum Backend läuft..."
     });
 } catch (error) {
-    
+    res.status(500).json({
+        success: false,
+        message: "Fehler beim Laden der Bilder..."
+    });
 }
 })
 

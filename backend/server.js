@@ -6,7 +6,11 @@ const { connectToDatabase } = require("./db.js");
 const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+  origin: ['http://localhost:80', 'http://frontend:80'],
+  credentials: true
+}));
 
 app.get("/api/check", async (req, res) => {
     res.status(200).json({
@@ -36,5 +40,5 @@ app.get("/api/pictures/all", async (req, res) => {
 
 
 app.listen(3000, () => {
-    console.log(`Server läuft unter http://localhost:3000`);
+    console.log(`Server läuft unter http://backend:3000`);
 })

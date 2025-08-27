@@ -18,7 +18,7 @@ async function getPics() {
 
 async function checkConnection() {
   try {
-    const response = await fetch("/api/check");
+    const response = await fetch("http://machinezr.de:3000/api/check");
     console.log(response);
     const data = await response.json();
     const responseFromApi = data;

@@ -1,0 +1,145 @@
+.card {
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.screenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-info {
+  transform: translateY(0);
+}
+
+.card-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.card-description {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.card:hover .card-description {
+  opacity: 1;
+  max-height: 50px;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.btn-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#errorMessage {
+  border-radius: 20px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  z-index: 1030;
+  /* Höher als navbar (1030) */
+}
+
+.navbar {
+  background-color: #1a252f;
+  /* Noch dunkleres Blau-Grau */
+  color: #ecf0f1;
+}
+
+body {
+  background-color: #2c3e50;
+  /* Dunkles Blau-Grau */
+  color: #ecf0f1;
+}
+
+.footer {
+    background-color: rgba(26, 37, 47, 0.9);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed; /* Statt margin-top: auto */
+    bottom: 0; /* Am unteren Rand anheften */
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Sicherstellen, dass er über anderen Inhalten liegt */
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 20px;
+}
+
+.social-icons a {
+  color: #ecf0f1;
+  font-size: 1.5rem;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.social-icons a:hover {
+  color: #3498db;
+  transform: translateY(-3px);
+}
+
+.copyright {
+  color: #ecf0f1;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .social-icons {
+    gap: 15px;
+  }
+
+  .social-icons a {
+    font-size: 1.3rem;
+  }
+}

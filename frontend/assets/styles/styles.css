@@ -91,16 +91,19 @@ body {
 }
 
 .footer {
-    background-color: rgba(26, 37, 47, 0.9);
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed; /* Statt margin-top: auto */
-    bottom: 0; /* Am unteren Rand anheften */
-    left: 0;
-    right: 0;
-    z-index: 1000; /* Sicherstellen, dass er über anderen Inhalten liegt */
+  background-color: rgba(26, 37, 47, 0.9);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  /* Statt margin-top: auto */
+  bottom: 0;
+  /* Am unteren Rand anheften */
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  /* Sicherstellen, dass er über anderen Inhalten liegt */
 }
 
 .social-icons {
@@ -141,5 +144,93 @@ body {
 
   .social-icons a {
     font-size: 1.3rem;
+  }
+}
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+.construction-container {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  width: 90%;
+}
+
+.fa-warning {
+  font-size: 6rem;
+  color: #FFD700;
+  margin-bottom: 1.5rem;
+  display: block;
+  animation: pulse 2s infinite;
+}
+
+h1 {
+  font-weight: 700;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.social-icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.8rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icons a:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .fa-warning {
+    font-size: 4rem;
+  }
+
+  .social-icons a {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 }

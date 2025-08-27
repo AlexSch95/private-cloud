@@ -8,6 +8,13 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
+app.get("/api/check", async (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Verbindung zum Backend läuft..."
+    });
+})
+
 app.get("/api/pictures/all", async (req, res) => {
     try {
         const connection = await connectToDatabase();

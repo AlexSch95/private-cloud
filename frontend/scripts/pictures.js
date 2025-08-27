@@ -1,6 +1,7 @@
 import { showFeedback } from "./sharedFunctions.js";
 const picContainer = document.getElementById("picContainer");
-getPics();
+// getPics();
+checkConnection();
 
 async function getPics() {
   try {
@@ -9,6 +10,18 @@ async function getPics() {
     const responseFromApi = data;
     showFeedback(responseFromApi);
     renderPics(responseFromApi.pictures);
+  } catch (error) {
+    console.log(error);
+    showFeedback({ success: false, message: error.message });
+  }
+}
+
+async function checkConnection() {
+  try {
+    const response = await fetch("http://backend:3000/api/check");
+    const data = await response.json();
+    const responseFromApi = data;
+    showFeedback(responseFromApi);
   } catch (error) {
     console.log(error);
     showFeedback({ success: false, message: error.message });

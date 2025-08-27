@@ -1,15 +1,15 @@
-# backend/Dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Pakete zuerst kopieren für besseres Caching
+# Abhängigkeiten installieren
 COPY package*.json ./
 RUN npm install
 
-# Anwendungscode kopieren
+# Anwendung kopieren
 COPY . .
 
+# Port freigeben
 EXPOSE 3000
 
 CMD ["node", "server.js"]

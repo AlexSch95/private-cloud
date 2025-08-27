@@ -9,10 +9,4 @@ CREATE TABLE pics (
     pic_path VARCHAR(255) NOT NULL
 );
 
-INSERT INTO pics (pic_path) VALUES
-('testdata/1.png'), 
-('testdata/2.png'), 
-('testdata/3.png'), 
-('testdata/4.png');
-
 

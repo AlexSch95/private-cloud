@@ -22,6 +22,7 @@ async function checkConnection() {
     const data = await response.json();
     const responseFromApi = data;
     showFeedback(responseFromApi);
+    console.log("yes");
   } catch (error) {
     console.log(error);
     showFeedback({ success: false, message: error.message });

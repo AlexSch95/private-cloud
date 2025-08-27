@@ -25,10 +25,14 @@ app.use(cors({
 }));
 
 app.get("/api/check", async (req, res) => {
+try {
     res.status(200).json({
         success: true,
         message: "Verbindung zum Backend läuft..."
     });
+} catch (error) {
+    
+}
 })
 
 app.get("/api/pictures/all", async (req, res) => {

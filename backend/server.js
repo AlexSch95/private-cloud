@@ -8,7 +8,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use(cors({
-  origin: ['http://localhost:80', 'http://frontend:80'],
+  origin: ['http://localhost:80', 'http://frontend:80', 'http://machinezr.de'],
   credentials: true
 }));
 

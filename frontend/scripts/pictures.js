@@ -1,6 +1,5 @@
 import { showFeedback } from "./sharedFunctions.js";
 
-const API_URL = "localhost:3000";
 
 const picContainer = document.getElementById("picContainer");
 document.getElementById("searchInput").addEventListener("input", filterPics);

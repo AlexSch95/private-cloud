@@ -56,16 +56,15 @@ const upload = multer({
 function parseFilename(filename) {
   // Dateinamen ohne Extension
   const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
-  console.log(filename);
   const parts = nameWithoutExt.split(/[_:]+/);
-  const beautifulTime = parts[2].replace(/-/g, ':')+" Uhr";
-  const beautifulDate = parts[1].replace(/-/g, '.');
+  const extractedTime = parts[2];
+  const extractedDate = parts[1];
   
   return {
     original: filename,
     name: parts[0] || '', // "Code"
-    date: beautifulDate || '', // "29-08-25"
-    time: beautifulTime || '', // "12-02"
+    date: extractedDate || '', // "29-08-25"
+    time: extractedTime || '', // "12-02"
   };
 }
 

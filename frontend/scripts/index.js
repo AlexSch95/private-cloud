@@ -13,7 +13,6 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         const data = await response.json();
         showFeedback(data);
         if (data.success) {
-            localStorage.setItem("jwttoken", data.token);
             showFeedback(data);
             setTimeout(() => {
                 window.location.href = "./pictures.html";

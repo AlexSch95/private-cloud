@@ -1,13 +1,20 @@
-import { showFeedback } from "./sharedFunctions.js";
-
+import { showFeedback, checkAuth, logout } from "./sharedFunctions.js";
 
 const picContainer = document.getElementById("picContainer");
 document.getElementById("searchInput").addEventListener("input", filterPics);
+document.getElementById('logout')?.addEventListener('click', logout);
 
 let picsData = {};
 
-getPics();
+async function initApp() {
+  const isAuthed = await checkAuth();
+  if (!isAuthed) {
+    return;
+  }
+  getPics();
+}
 
+initApp();
 
 let currentPictureId = null;
 

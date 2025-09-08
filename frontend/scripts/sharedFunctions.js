@@ -16,3 +16,42 @@ export function showFeedback(result) {
     document.getElementById("errorMessage").classList.remove("show");
   }, 3000);
 }
+
+
+export async function checkAuth() {
+  try {
+    const response = await fetch("/api/check-auth");
+    const result = await response.json();
+    if (!result.success) {
+      showFeedback({success: false, message: error});
+      setTimeout(() => {
+        window.location.href = "./index.html";
+      }, 5000);
+      return false;
+    }
+    return true
+  } catch (error) {
+    console.error(error);
+    showFeedback({success: false, message: "Verbindungsfehler... Versuchen Sie es später erneut."})
+    setTimeout(() => {
+      window.location.href = "./index.html";
+    }, 5000);
+  }
+}
+
+export async function logout() {
+    try {
+      const response = await fetch("/api/logout");
+      const data = await response.json();
+      showFeedback(data);
+      setTimeout(() => {
+        window.location.href = './index.html';
+      }, 5000);
+    } catch (error) {
+      console.error("Logout-Fehler:", error);
+      showFeedback({
+        success: false,
+        message: error.message || "Verbindungsfehler... Abmeldung nicht möglich."
+      });
+    }
+}

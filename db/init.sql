@@ -1,3 +1,5 @@
+USE private_cloud;
+
 CREATE TABLE IF NOT EXISTS pictures (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,

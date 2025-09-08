@@ -93,6 +93,10 @@
     transform: translateY(-3px);
 }
 
+.btn-action i {
+  pointer-events: none;
+}
+
 .btn-delete:hover {
     background-color: var(--accent-color);
 }

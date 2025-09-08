@@ -1,5 +1,7 @@
 import { showFeedback } from "./sharedFunctions.js";
 
+const API_URL = "localhost:3000";
+
 const picContainer = document.getElementById("picContainer");
 document.getElementById("searchInput").addEventListener("input", filterPics);
 
@@ -33,7 +35,7 @@ document.getElementById('confirmNo').addEventListener('click', function () {
 
 async function getPics() {
   try {
-    const response = await fetch("http://localhost:3000/api/pictures/all");
+    const response = await fetch(`/api/pictures/all`);
     const data = await response.json();
     const responseFromApi = data;
     showFeedback(responseFromApi);
@@ -49,7 +51,7 @@ async function getPics() {
 async function deletePic(pictureId) {
   console.log(pictureId);
   try {
-    const response = await fetch(`http://localhost:3000/api/pictures/delete/${pictureId}`, {
+    const response = await fetch(`/api/pictures/delete/${pictureId}`, {
       method: "DELETE"
     });
     const data = await response.json();

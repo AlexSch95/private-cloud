@@ -6,22 +6,23 @@ const fs = require("fs");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-require('dotenv').config();
 const { connectToDatabase } = require("./db.js");
-
 const app = express();
+
+require('dotenv').config();
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
-const WINDOWS_IMAGE_DIR = 'C:\\Users\\balex\\Workspace\\Persönlich\\developement-fileserver\\files\\images';
+const IMAGE_DIRECTORY = '/app/uploads/images';
 const BASE_URL = 'http://localhost:3000';
 const secretKey = process.env.JWT_SECRET
 
 // Multer Konfiguration für Windows
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, WINDOWS_IMAGE_DIR);
+    cb(null, IMAGE_DIRECTORY);
   },
   filename: function (req, file, cb) {
     // ShareX-kompatibler Dateiname
@@ -121,17 +122,24 @@ app.delete('/api/pictures/delete/:id', async (req, res) => {
   }
 });
 
-app.use('/images', express.static(WINDOWS_IMAGE_DIR));
+app.use('/images', express.static(IMAGE_DIRECTORY));
 
 app.get("/api/pictures/all", async (req, res) => {
     try {
-        const connection = await connectToDatabase();
-        const [result] = await connection.execute("SELECT * FROM pictures;");
-        await connection.end();
-        res.status(200).json({
-            success: true, 
-            message: "Bilder erfolgreich geladen", 
-            pictures: result});
+        db.all("SELECT * FROM pictures ORDER BY creation_date DESC, creation_time DESC", [], (err, result) => {
+            if (err) {
+                console.error('Fehler beim Laden der Bilder:', err);
+                return res.status(500).json({
+                    success: false,
+                    message: "Fehler beim Laden der Bilder..."
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: "Bilder erfolgreich geladen",
+                pictures: result
+            });
+        });
     } catch (error) {
         res.status(500).json({
             success: false,

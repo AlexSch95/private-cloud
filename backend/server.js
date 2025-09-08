@@ -143,7 +143,7 @@ app.get("/api/pictures/all", async (req, res) => {
     }
 })
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const {username, password} = req.body;
     if (username === undefined || password === undefined) {
@@ -198,7 +198,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
     try {
         // Username und Passwort auslesen
         const { username, password } = req.body;

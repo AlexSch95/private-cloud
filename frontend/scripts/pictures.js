@@ -91,19 +91,25 @@ function renderPics(localPics) {
     const col = document.createElement("div");
     col.className = "col-12 col-md-6 col-lg-4 mb-4";
     col.innerHTML = `
-                <div class="card">
-                    <img src="${pic.file_path}" alt="Screenshot" class="screenshot">
-                    <div class="card-info">
+                <div class="card-container">
+                    <img src="${pic.file_path}" alt="Screenshot" class="card-image">
+                    <div class="card-overlay">
                         <h3 class="card-title">${pic.title}</h3>
                         <div class="card-meta">
-                            <span>${dateString}</span>
-                            <span>${timeString}</span>
+                            <div>${dateString}</div>
+                            <div>${timeString}</div>
                         </div>
-                        <div class="btn-container d-flex justify-content-between">
-                            <button class="btn btn-sm btn-primary picture-direct-button" data-picture="${pic.file_path}">In neuem Tab öffnen</button>
-                            <button class="btn btn-sm btn-outline-light picture-link-button" data-picture="${pic.file_path}">Link kopieren</button>
-                            <button class="btn btn-sm btn-outline-danger picture-delete-button" data-picture-id="${pic.id}"><span class="material-icons picture-delete-button" data-picture-id="${pic.id}">delete_forever</span></button>
-                          </div>
+                        <div class="card-buttons">
+                            <button class="btn-action picture-direct-button" title="In neuem Tab öffnen" data-picture="${pic.file_path}">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </button>
+                            <button class="btn-action picture-link-button" title="Link kopieren" data-picture="${pic.file_path}">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                            <button class="btn-action btn-delete picture-delete-button" title="Bild löschen" data-picture-id="${pic.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
         `;

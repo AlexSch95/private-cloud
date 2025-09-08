@@ -91,7 +91,7 @@ app.post('/api/pictures/upload', upload.single('image'), async(req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
-    const imageUrl = `${BASE_URL}/images/${req.file.filename}`;
+    const imageUrl = `privatecloud/images/${req.file.filename}`;
     res.send(imageUrl);
     await dbPictureMeta(req.file.filename);
     console.log(`Upload successful: ${imageUrl}`);

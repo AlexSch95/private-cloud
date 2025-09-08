@@ -185,7 +185,7 @@ app.get("/api/pictures/all", authenticateToken, async (req, res) => {
   }
 })
 
-app.post("/api/logout", (req, res) => {
+app.get("/api/logout", (req, res) => {
   res.clearCookie('token').json({
     success: true,
     message: "Abmeldung erfolgreich."

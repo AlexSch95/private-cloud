@@ -193,7 +193,7 @@ app.post("/api/login", async (req, res) => {
     console.error(`Fehler in Route "/api/admin/login": ${error}`);
     res.status(500).json({
       success: false, 
-      message: "Interner Severfehler, Systemadministrator kontaktieren."
+      message: "Interner Serverfehler, Systemadministrator kontaktieren."
     })
   }
 });

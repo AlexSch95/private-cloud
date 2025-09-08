@@ -61,7 +61,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({success: false, message: "Token wurde nicht übermittelt."});
   }
   try {
-    const decoded = jwt.verify(token, secretKey);
+    const decoded = jwt.verify(tokenFromCookie, secretKey);
     req.user = decoded.username;
     req.id = decoded.id;
     next();

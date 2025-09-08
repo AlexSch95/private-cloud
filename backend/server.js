@@ -16,7 +16,6 @@ app.use(express.json());
 app.use(cors());
 
 const IMAGE_DIRECTORY = '/app/uploads/images';
-const BASE_URL = 'http://localhost:3000';
 const secretKey = process.env.JWT_SECRET
 
 // Multer Konfiguration für Windows
@@ -70,8 +69,7 @@ function parseFilename(filename) {
 
 async function dbPictureMeta (filename) {
     const meta = parseFilename(filename);
-    const generatedFilepath = "http://privatecloud/images/" + filename;
-    console.log(generatedFilepath);
+    const generatedFilepath = "http://machinezr.de/images/" + filename;
     try {
         const connection = await connectToDatabase();
         const [result] = await connection.execute(
@@ -90,7 +88,7 @@ app.post('/api/pictures/upload', upload.single('image'), async(req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
-    const imageUrl = `http://privatecloud/images/${req.file.filename}`;
+    const imageUrl = `http://machinezr.de/images/${req.file.filename}`;
     res.send(imageUrl);
     await dbPictureMeta(req.file.filename);
     console.log(`Upload successful: ${imageUrl}`);

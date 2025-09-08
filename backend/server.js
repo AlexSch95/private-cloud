@@ -71,7 +71,7 @@ function parseFilename(filename) {
 
 async function dbPictureMeta (filename) {
     const meta = parseFilename(filename);
-    const generatedFilepath = "http://localhost:8000/images/" + filename;
+    const generatedFilepath = "http://privatecloud/images/" + filename;
     console.log(generatedFilepath);
     try {
         const connection = await connectToDatabase();
@@ -91,7 +91,7 @@ app.post('/api/pictures/upload', upload.single('image'), async(req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
-    const imageUrl = `privatecloud/images/${req.file.filename}`;
+    const imageUrl = `http://privatecloud/images/${req.file.filename}`;
     res.send(imageUrl);
     await dbPictureMeta(req.file.filename);
     console.log(`Upload successful: ${imageUrl}`);

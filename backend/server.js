@@ -146,16 +146,6 @@ app.get("/api/pictures/all", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const {username, password} = req.body;
-        res.status(500).json({
-            success: false,
-            message: "Fehler beim Laden der Bilder..."
-        });
-    }
-})
-
-app.post("/login", async (req, res) => {
-  try {
-    const {username, password} = req.body;
     if (username === undefined || password === undefined) {
       return res.status(400).json({
         success: false,

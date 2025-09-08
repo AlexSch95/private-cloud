@@ -15,7 +15,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
-const IMAGE_DIRECTORY = '/app/uploads/images';
+const IMAGE_DIRECTORY = '/uploads/images';
 const BASE_URL = 'http://localhost:3000';
 const secretKey = process.env.JWT_SECRET
 

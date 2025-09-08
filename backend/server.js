@@ -126,21 +126,26 @@ app.use('/images', express.static(IMAGE_DIRECTORY));
 
 app.get("/api/pictures/all", async (req, res) => {
     try {
-        db.all("SELECT * FROM pictures ORDER BY creation_date DESC, creation_time DESC", [], (err, result) => {
-            if (err) {
-                console.error('Fehler beim Laden der Bilder:', err);
-                return res.status(500).json({
-                    success: false,
-                    message: "Fehler beim Laden der Bilder..."
-                });
-            }
-            res.status(200).json({
-                success: true,
-                message: "Bilder erfolgreich geladen",
-                pictures: result
-            });
-        });
+      const connection = await connectToDatabase();
+      const [result] = await connection.execute("SELECT * FROM pictures ORDER BY creation_date DESC, creation_time DESC;");
+      await connection.end();
+      res.status(200).json({
+          success: true,
+          message: "Bilder erfolgreich geladen",
+          pictures: result
+      });
     } catch (error) {
+        console.error('Fehler beim Laden der Bilder:', error);
+        res.status(500).json({
+            success: false,
+            message: "Fehler beim Laden der Bilder..."
+        });
+    }
+})
+
+app.post("/login", async (req, res) => {
+  try {
+    const {username, password} = req.body;
         res.status(500).json({
             success: false,
             message: "Fehler beim Laden der Bilder..."

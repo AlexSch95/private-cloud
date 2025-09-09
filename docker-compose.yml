@@ -21,7 +21,7 @@ services:
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
     volumes:
-      - ./backend/uploads:/app/uploads  # Für Dateiuploads
+      - ./backend/uploads:/app/uploads  # dateiuploads
     depends_on:
       - mysql
     restart: unless-stopped

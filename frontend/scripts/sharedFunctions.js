@@ -23,7 +23,7 @@ export async function checkAuth() {
     const response = await fetch("/api/check-auth");
     const result = await response.json();
     if (!result.success) {
-      showFeedback({success: false, message: error});
+      showFeedback(result);
       setTimeout(() => {
         window.location.href = "./index.html";
       }, 5000);
@@ -31,7 +31,6 @@ export async function checkAuth() {
     }
     return true
   } catch (error) {
-    console.error(error);
     showFeedback({success: false, message: "Verbindungsfehler... Versuchen Sie es später erneut."})
     setTimeout(() => {
       window.location.href = "./index.html";
@@ -51,7 +50,7 @@ export async function logout() {
       console.error("Logout-Fehler:", error);
       showFeedback({
         success: false,
-        message: error.message || "Verbindungsfehler... Abmeldung nicht möglich."
+        message: "Verbindungsfehler... Abmeldung nicht möglich."
       });
     }
 }

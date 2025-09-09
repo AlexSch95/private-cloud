@@ -136,17 +136,16 @@ app.post('/api/pictures/upload', upload.single('image'), async (req, res) => {
     const imageUrl = `http://machinezr.de/images/${req.file.filename}`;
     res.send(imageUrl);
     await dbPictureMeta(req.file.filename);
-    console.log(`Upload successful: ${imageUrl}`);
+    console.log(`Upload Erfolgreich: ${imageUrl}`);
 
   } catch (error) {
-    console.error('Upload Error:', error);
-    res.status(500).send('Upload failed: ' + error.message);
+    console.error('Upload Fehler:', error);
+    res.status(500).send('Upload fehlgeschlagen: ' + error.message);
   }
 });
 
 app.delete('/api/pictures/delete/:id', authenticateToken, async (req, res) => {
   const pictureId = req.params.id;
-  console.log(pictureId);
   try {
     const connection = await connectToDatabase();
     const [result] = await connection.execute("DELETE FROM pictures WHERE id = ?;", [pictureId]);
@@ -247,39 +246,39 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.post("/api/register", async (req, res) => {
-  try {
-    // Username und Passwort auslesen
-    const { username, password } = req.body;
-    if (username === undefined || password === undefined) {
-      return res.status(400).json({ error: "Username oder Passwort nicht übergeben." });
-    }
-    const connection = await connectToDatabase();
-    // Überprüfe, ob Username schon vergeben
-    const [existingUsers] = await connection.execute(
-      'SELECT * FROM users WHERE user_name = ?', [username]
-    );
-    if (existingUsers.length > 0) {
-      return res.status(500).json({
-        success: false,
-        message: "Username existiert schon."
-      });
-    }
-    // Ab hier: User erstellen
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const [newUser] = await connection.execute(
-      'INSERT INTO users (user_name, password_hash) VALUES (?, ?)', [username, hashedPassword]
-    );
-    await connection.end();
-    res.status(201).json({
-      success: true,
-      message: `User ${username} erfolgreich erstellt.`,
-    })
-  } catch (error) {
-    return res.status(500).json({ error: "Fehler beim Erstellen des Users." });
-  }
-});
+// app.post("/api/register", async (req, res) => {
+//   try {
+//     // Username und Passwort auslesen
+//     const { username, password } = req.body;
+//     if (username === undefined || password === undefined) {
+//       return res.status(400).json({ error: "Username oder Passwort nicht übergeben." });
+//     }
+//     const connection = await connectToDatabase();
+//     // Überprüfe, ob Username schon vergeben
+//     const [existingUsers] = await connection.execute(
+//       'SELECT * FROM users WHERE user_name = ?', [username]
+//     );
+//     if (existingUsers.length > 0) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Username existiert schon."
+//       });
+//     }
+//     // Ab hier: User erstellen
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
+//     const [newUser] = await connection.execute(
+//       'INSERT INTO users (user_name, password_hash) VALUES (?, ?)', [username, hashedPassword]
+//     );
+//     await connection.end();
+//     res.status(201).json({
+//       success: true,
+//       message: `User ${username} erfolgreich erstellt.`,
+//     })
+//   } catch (error) {
+//     return res.status(500).json({ error: "Fehler beim Erstellen des Users." });
+//   }
+// });
 
 
 

@@ -16,17 +16,16 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md sticky-top py-3 navbar-dark" id="mainNav">
-        <div class="container"><a class="navbar-brand d-flex w-25 align-items-center" href="/"><img class="img-fluid"
+    <nav id="mainNav" class="navbar navbar-expand-md sticky-top py-3 navbar-dark">
+        <div class="container"><a class="navbar-brand d-flex w-25 align-items-center" href="#"><img class="img-fluid"
                     width="600" height="200" src="assets/img/brand.png" style="max-width: 75%;"></a><button
-                data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
+                class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-1"><span
                     class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
+            <div id="navcol-1" class="collapse navbar-collapse">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link active" href="pictures.html">Pictures</a></li>
-                    <li class="nav-item"><a class="nav-link disabled" href="clips.html">Clips</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-danger" href="#" id="logout"><span class="material-icons">logout</span></a></li>
-                </ul>
+                    <li class="nav-item"><a class="nav-link active" href="/pictures.html">Pictures</a></li>
+                </ul><a class="btn btn-action btn-danger shadow" id="logout" role="button" href="#"><i
+                        class="bi bi-box-arrow-right"></i></a>
             </div>
         </div>
         <div id="errorMessage" class="alert mx-auto mt-3 fade w-25 text-center" role="alert">
@@ -39,31 +38,7 @@
                 <input type="text" class="form-control" placeholder="Suchen..." id="searchInput">
             </div>
         </div>
-        <div id="picContainer" class="row mt-3">
-<div class="col-md-4 col-sm-6">
-                <div class="card-container">
-                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Berglandschaft" class="card-image">
-                    <div class="card-overlay">
-                        <h3 class="card-title">Berglandschaft</h3>
-                        <div class="card-meta">
-                            <div>Aufgenommen: 15.06.2022</div>
-                            <div>Größe: 2.4 MB</div>
-                            <div>Auflösung: 1920x1080</div>
-                        </div>
-                        <div class="card-buttons">
-                            <button class="btn-action" title="In neuem Tab öffnen" onclick="openInNewTab('https://images.unsplash.com/photo-1506744038136-46273834b3fb')">
-                                <i class="bi bi-box-arrow-up-right"></i>
-                            </button>
-                            <button class="btn-action" title="Link kopieren" onclick="copyLink('https://images.unsplash.com/photo-1506744038136-46273834b3fb')">
-                                <i class="bi bi-link-45deg"></i>
-                            </button>
-                            <button class="btn-action btn-delete" title="Bild löschen" onclick="deleteImage(this)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="picContainer" class="row mt-3"></div>
     </div>
     <div class="modal-backdrop" id="modalBackdrop"></div>
 

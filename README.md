@@ -1,0 +1,8 @@
+Example .env:
+
+DB_HOST=mysql
+DB_USER=private_cloud_user
+DB_PASSWORD=developement_db_pw
+DB_NAME=private_cloud
+DB_ROOT_PASSWORD=developement_db_root_pw
+JWT_SECRET=developement_jwt_secret

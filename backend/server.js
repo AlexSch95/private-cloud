@@ -100,7 +100,7 @@ function parseFilename(filename) {
 
 async function dbPictureMeta(filename) {
   const meta = parseFilename(filename);
-  const generatedFilepath = "http://machinezr.de/images/" + filename;
+  const generatedFilepath = "https://machinezr.de/images/" + filename;
   try {
     const connection = await connectToDatabase();
     const [result] = await connection.execute(
@@ -133,7 +133,7 @@ app.post('/api/pictures/upload', upload.single('image'), async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
-    const imageUrl = `http://machinezr.de/images/${req.file.filename}`;
+    const imageUrl = `https://machinezr.de/images/${req.file.filename}`;
     res.send(imageUrl);
     await dbPictureMeta(req.file.filename);
     console.log(`Upload Erfolgreich: ${imageUrl}`);

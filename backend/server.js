@@ -58,7 +58,7 @@ const upload = multer({
 function authenticateToken(req, res, next) {
   const tokenFromCookie = req.cookies.token;
   if (!tokenFromCookie){
-    return res.status(401).json({success: false, message: "Token wurde nicht übermittelt."});
+    return res.status(401).json({success: false, message: "Zugriff verweigert. Bitte anmelden."});
   }
   try {
     const decoded = jwt.verify(tokenFromCookie, secretKey);
@@ -78,7 +78,7 @@ function authenticateToken(req, res, next) {
     }
     res.status(500).json({
       success: false, 
-      message: "Ungültiger oder abgelaufener Token wurde übermittelt."
+      message: "Es besteht ein Problem mit dem Session-Cookie. Bitte melden Sie sich erneut an oder kontaktieren Sie einen Administrator"
     })
   }
 }

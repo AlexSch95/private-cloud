@@ -23,7 +23,6 @@ export async function checkAuth() {
     const response = await fetch("/api/check-auth");
     const result = await response.json();
     if (!result.success) {
-      showFeedback(result);
       setTimeout(() => {
         window.location.href = "./index.html";
       }, 5000);
@@ -31,7 +30,6 @@ export async function checkAuth() {
     }
     return true
   } catch (error) {
-    showFeedback({success: false, message: "Verbindungsfehler... Versuchen Sie es später erneut."})
     setTimeout(() => {
       window.location.href = "./index.html";
     }, 5000);

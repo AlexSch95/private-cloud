@@ -67,14 +67,16 @@ git clone https://github.com/yourusername/private-cloud.git
 cd private-cloud
 ```
 
-2. Umgebungsvariablen konfigurieren (Beispiel):
+2. Umgebungsvariablen konfigurieren (Beispiel für Local Developement):
 ```bash
 echo "DB_HOST=mysql
 DB_USER=private_cloud_user
 DB_PASSWORD=developement_db_pw
 DB_NAME=private_cloud
 DB_ROOT_PASSWORD=developement_db_root_pw
-JWT_SECRET=developement_jwt_secret" > .env
+JWT_SECRET=developement_jwt_secret
+NGINX_CONF=nginx.dev.conf
+FRONTEND_URL=http://localhost" > .env
 ```
 
 3. Docker-Container starten:

@@ -19,7 +19,9 @@ app.use(cookieParser());
 app.use(cors());
 
 const IMAGE_DIRECTORY = '/app/uploads/images';
-const secretKey = process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET;
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost";
 
 // Multer Konfiguration für Windows
 const storage = multer.diskStorage({
@@ -100,7 +102,7 @@ function parseFilename(filename) {
 
 async function dbPictureMeta(filename) {
   const meta = parseFilename(filename);
-  const generatedFilepath = "https://machinezr.de/images/" + filename;
+  const generatedFilepath = `${FRONTEND_URL}/images/${filename}`;
   try {
     const connection = await connectToDatabase();
     const [result] = await connection.execute(
@@ -133,7 +135,7 @@ app.post('/api/pictures/upload', upload.single('image'), async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
-    const imageUrl = `https://machinezr.de/images/${req.file.filename}`;
+    const imageUrl = `${FRONTEND_URL}/images/${req.file.filename}`;
     res.send(imageUrl);
     await dbPictureMeta(req.file.filename);
     console.log(`Upload Erfolgreich: ${imageUrl}`);

@@ -20,8 +20,7 @@ app.use(cors());
 
 const IMAGE_DIRECTORY = '/app/uploads/images';
 const secretKey = process.env.JWT_SECRET;
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost";
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // Multer Konfiguration für Windows
 const storage = multer.diskStorage({

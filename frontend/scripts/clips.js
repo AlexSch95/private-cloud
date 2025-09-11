@@ -1,3 +1,4 @@
+// desc: importiert Hilfsfunktion für Feedback Anzeige
 import { showFeedback } from "./sharedFunctions.js";
 
 const picContainer = document.getElementById("picContainer");

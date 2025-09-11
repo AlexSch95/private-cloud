@@ -18,11 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
+// desc: Directories werden festgelegt und konstanten aus .env geladen
 const IMAGE_DIRECTORY = '/app/uploads/images';
+const CLIPS_DIRECTORY = '/app/uploads/clips';
 const secretKey = process.env.JWT_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-// Multer Konfiguration für Windows
+// desc: Multer Storage konfiguration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, IMAGE_DIRECTORY);
@@ -35,10 +37,10 @@ const storage = multer.diskStorage({
   }
 });
 
+// desc: Dateifilter für multer, nur Bilder erlaubt
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp|bmp|tiff|svg/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  console.log(extname);
   const mimetype = file.mimetype.startsWith('image/');
 
   if (mimetype && extname) {
@@ -48,7 +50,8 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
+// desc: Multer-Upload-Setup Images
+const imagesUpload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
@@ -56,6 +59,7 @@ const upload = multer({
   }
 });
 
+// desc: Middleware zur Token-Authentifizierung
 function authenticateToken(req, res, next) {
   const tokenFromCookie = req.cookies.token;
   if (!tokenFromCookie){
@@ -84,6 +88,7 @@ function authenticateToken(req, res, next) {
   }
 }
 
+// desc: Dateinamen parsen und Metadaten extrahieren für Datenbank
 function parseFilename(filename) {
   // Dateinamen ohne Extension
   const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
@@ -99,6 +104,7 @@ function parseFilename(filename) {
   };
 }
 
+// desc: Metadaten in die Datenbank schreiben
 async function dbPictureMeta(filename) {
   const meta = parseFilename(filename);
   const generatedFilepath = `${FRONTEND_URL}/images/${filename}`;
@@ -115,6 +121,7 @@ async function dbPictureMeta(filename) {
   }
 }
 
+// desc: Auth-Check Route die im Frontend zum Redirect auf Login führt
 app.get("/api/check-auth", authenticateToken, (req, res) => {
   try {
     res.status(200).json({
@@ -129,7 +136,8 @@ app.get("/api/check-auth", authenticateToken, (req, res) => {
   }
 })
 
-app.post('/api/pictures/upload', upload.single('image'), async (req, res) => {
+// desc: Bild-Upload Route für ShareX Custom Uploader optimiert
+app.post('/api/pictures/upload', imagesUpload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
@@ -145,6 +153,8 @@ app.post('/api/pictures/upload', upload.single('image'), async (req, res) => {
   }
 });
 
+// desc: Route um Bild zu löschen, löscht aktuell nur Meta-Daten, datei bleibt vorhanden
+// todo: Bild endgültig löschen oder 30 tage zwischenspeichern und automatisiert nach 30 tagen löschen
 app.delete('/api/pictures/delete/:id', authenticateToken, async (req, res) => {
   const pictureId = req.params.id;
   try {
@@ -164,8 +174,10 @@ app.delete('/api/pictures/delete/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// desc: ermöglicht direct URL zu den Bildern
 app.use('/images', express.static(IMAGE_DIRECTORY));
 
+// desc: Route um alle Bilder zu laden
 app.get("/api/pictures/all", authenticateToken, async (req, res) => {
   try {
     const connection = await connectToDatabase();
@@ -185,6 +197,7 @@ app.get("/api/pictures/all", authenticateToken, async (req, res) => {
   }
 })
 
+// desc: logout route, löscht cookie
 app.get("/api/logout", (req, res) => {
   res.clearCookie('token').json({
     success: true,
@@ -192,6 +205,7 @@ app.get("/api/logout", (req, res) => {
   });
 });
 
+// desc: Login Route, erstellt JWT Token und sendet diesen als HttpOnly Cookie
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;

@@ -1,3 +1,4 @@
+// desc: importiert auth, logout und feedback funktion
 import { showFeedback, checkAuth, logout } from "./sharedFunctions.js";
 
 const picContainer = document.getElementById("picContainer");
@@ -6,9 +7,16 @@ document.getElementById('logout')?.addEventListener('click', logout);
 
 let picsData = {};
 
+// desc: initial wird erstmal der Cookie geprüft, je nach Ergebnis werden die Bilder geladen oder nicht
 async function initApp() {
   const isAuthed = await checkAuth();
-  if (!isAuthed) {
+  console.log(isAuthed);
+  if (!isAuthed.success) {
+    showFeedback(isAuthed);
+    console.log("authed false, weiterleitung zur login seite");
+    setTimeout(() => {
+      window.location.href = "./index.html";
+    }, 3000);
     return;
   }
   getPics();
@@ -16,8 +24,10 @@ async function initApp() {
 
 initApp();
 
+// desc: Hilfsvariable für Löschvorgang
 let currentPictureId = null;
 
+// desc: Modal für Löschbestätigung
 function showCustomConfirm(pictureId) {
   currentPictureId = pictureId;
   document.getElementById('customConfirm').style.display = 'block';
@@ -37,8 +47,7 @@ document.getElementById('confirmNo').addEventListener('click', function () {
   document.getElementById('customConfirm').style.display = 'none';
 });
 
-
-
+// desc: lädt alle vorhandenen Bilder aus der DB
 async function getPics() {
   try {
     const response = await fetch(`/api/pictures/all`);
@@ -54,6 +63,7 @@ async function getPics() {
   }
 }
 
+//desc: Löschfunktion für Bilder nach bestätigung des Modals
 async function deletePic(pictureId) {
   console.log(pictureId);
   try {
@@ -72,8 +82,7 @@ async function deletePic(pictureId) {
   }
 }
 
-
-
+//desc: Filterfunktion der Anzeige
 function filterPics() {
   const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
   const filteredPics = picsData.filter((pic) =>
@@ -82,7 +91,7 @@ function filterPics() {
   renderPics(filteredPics);
 };
 
-
+//desc: Renderfunktion für das Array der Bildobjekte
 function renderPics(localPics) {
   picContainer.innerHTML = "";
   localPics.forEach((pic) => {

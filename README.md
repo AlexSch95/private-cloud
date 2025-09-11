@@ -45,6 +45,7 @@ private-cloud/
 │   ├── scripts/            # JavaScript-Module
 │   ├── *.html             # HTML-Seiten
 │   ├── Dockerfile         # Frontend-Container
+│   ├── nginx.dev.conf     # Nginx-Konfiguration ohne SSL (für Dev)
 │   └── nginx.conf         # Nginx-Konfiguration
 │
 ├── backend/                 # Backend-Server

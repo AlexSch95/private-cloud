@@ -23,7 +23,9 @@
                     class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div id="navcol-1" class="collapse navbar-collapse">
                 <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link active" href="/pictures.html">Pictures</a></li>
+
                 </ul><a class="btn btn-action btn-danger shadow" id="logout" role="button" href="#"><i
                         class="bi bi-box-arrow-right"></i></a>
             </div>
@@ -33,11 +35,7 @@
         </div>
     </nav>
     <div class="container py-4 mt-5">
-        <div class="row justify-content-end mb-3">
-            <div class="col-auto">
-                <input type="text" class="form-control" placeholder="Suchen..." id="searchInput">
-            </div>
-        </div>
+        <div id="filterContainer"></div>
         <div id="picContainer" class="row mt-3"></div>
     </div>
     <div class="modal-backdrop" id="modalBackdrop"></div>

@@ -63,7 +63,7 @@ const imagesUpload = multer({
 function authenticateToken(req, res, next) {
   const tokenFromCookie = req.cookies.token;
   if (!tokenFromCookie){
-    return res.status(401).json({success: false, message: "Zugriff verweigert. Bitte anmelden."});
+    return res.status(401).json({success: false, message: "Bitte anmelden."});
   }
   try {
     const decoded = jwt.verify(tokenFromCookie, secretKey);

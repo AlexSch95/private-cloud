@@ -4,60 +4,149 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Login - Machinezr.de</title>
+    <title>Home - Machinezr.de</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
-    <link rel="stylesheet" href="assets/styles/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md sticky-top py-3 navbar-dark" id="mainNav">
-        <div class="container"><a class="navbar-brand d-flex w-25 align-items-center" href="/"><img class="img-fluid"
+    <nav id="mainNav" class="navbar navbar-expand-md sticky-top py-3 navbar-dark">
+        <div class="container"><a class="navbar-brand d-flex w-25 align-items-center" href="#"><img class="img-fluid"
                     width="600" height="200" src="assets/img/brand.png" style="max-width: 75%;"></a><button
-                data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
+                class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-1"><span
                     class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
+            <div id="navcol-1" class="collapse navbar-collapse">
                 <ul class="navbar-nav mx-auto">
-                    <!-- <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pictures.html">Pictures</a></li>
-                    <li class="nav-item"><a class="nav-link disabled" href="clips.html">Clips</a></li>
-                    <li class="nav-item"><a class="nav-link disabled" href="files.html">Files</a></li> -->
-                    <!-- </ul><a class="btn btn-primary shadow" role="button" href="signup.html">Sign up</a> -->
+                    <li class="nav-item"><a class="nav-link active" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/pictures.html">Pictures</a></li>
+                </ul>
             </div>
-        </div>
-        <div id="errorMessage" class="alert mx-auto mt-3 fade w-25 text-center" role="alert">
-            <span id="errorText"></span>
         </div>
     </nav>
     <div class="container pt-4">
-        <div class="row justify-content-center">
-            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
-                <div class="shadow-sm">
-                    <div class="card-body p-2">
-                        <form id="loginForm" method="#">
-                            <div class="mb-3">
-                                <input id="loginUsername" class="form-control form-control-lg" type="text"
-                                    name="username" placeholder="Benutzername" required>
-                            </div>
-                            <div class="mb-4">
-                                <input id="loginPassword" class="form-control form-control-lg" type="password"
-                                    name="password" placeholder="Passwort" required>
-                            </div>
-                            <div class="d-grid mb-3">
-                                <button class="btn btn-dark btn-lg" type="submit">
-                                    Anmelden
-                                </button>
-                            </div>
-                        </form>
+        <section class="py-5">
+            <div class="container text-center">
+
+                <h1 class="display-4 fw-bold mb-3">
+                    Hallo, ich bin <span class="text-info">Alex</span>!
+                </h1>
+
+
+                <p class="lead mb-4">
+                    Schüler bei Techstarter | Web-Entwickler
+                </p>
+
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="mailto:95.schulz@googlemail.com">
+                        <button class="btn btn-info btn-lg" href="#">
+                            <i class="bi bi-envelope me-2"></i>Kontakt
+                        </button>
+                    </a>
+                    <a href="https://github.com/AlexSch95">
+                        <button class="btn btn-info btn-lg">
+                            <i class="bi bi-github me-2"></i>GitHub
+                        </button>
+                    </a>
+                    <a href="https://techstarter.de/">
+                        <button class="btn btn-info btn-lg">
+                            <i class="bi bi-browser-chrome me-2"></i>Techstarter
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="py-4">
+            <div class="container">
+                <h2 class="text-center mb-5">Über mich</h2>
+
+                <div class="row align-items-center ">
+
+                    <div class="col-md-6 mb-4 mb-md-0 bg-dark bg-opacity-25 p-4 rounded-5">
+                        <h3 class="mb-3">Ein paar Worte zu mir...</h3>
+                        <p class="">
+                            Ich bin 30 Jahre alt und interessiere mich für Webentwicklung.
+                            In meiner Freizeit bin ich leidenschaftlicher Gamer und beschäftige mich viel mit den
+                            verschiedenen Themen der IT.
+                        </p>
+                        <p class="">
+                            Mein Ziel ist es, moderne und benutzerfreundliche Websites zu erstellen.
+                        </p>
+
+                        <div class="mt-4">
+                            <span class="badge bg-info me-2 mb-2">Python</span>
+                            <span class="badge bg-info me-2 mb-2">HTML</span>
+                            <span class="badge bg-info me-2 mb-2">CSS</span>
+                            <span class="badge bg-info me-2 mb-2">Bootstrap</span>
+                            <span class="badge bg-info me-2 mb-2">JavaScript</span>
+                            <span class="badge bg-info me-2 mb-2">Node.js</span>
+                            <span class="badge bg-info me-2 mb-2">Express.js</span>
+                            <span class="badge bg-info me-2 mb-2">MySQL</span>
+                            <span class="badge bg-info me-2 mb-2">SQLite</span>
+                            <span class="badge bg-info me-2 mb-2">Docker</span>
+                        </div>
+                    </div>
+
+                    <div class="col text-center">
+                        <div class="p-2 rounded-3">
+                            <img src="assets/img/me.jpg" height="400" width="300" alt="me"
+                                class="img-fluid rounded-5 shadow">
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+        <section>
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col col-xl-11 mx-auto">
+                        <div class="row gy-3 mb-4 mb-lg-5 mx-auto bg-dark bg-opacity-25 p-2 rounded-5">
+                            <div class="col-12 col-md-6 col-lg-7">
+                                <div class="bilder-galerie-special">
+                                    <div class="bg-container">
+                                        <div class="bg-item">
+                                            <img src="assets/img/watchbase.jpg" alt="Bild 1" class="bg-image">
+                                        </div>
+                                        <div class="bg-item">
+                                            <img src="assets/img/watchbase_admin.png" alt="Bild 2" class="bg-image">
+                                        </div>
+                                        <div class="bg-item">
+                                            <img src="assets/img/timezone_calc.png" alt="Bild 3" class="bg-image">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col d-flex align-items-md-center">
+                                <div class="ps-lg-5">
+                                    <h5 class="text-uppercase fw-bold heading">Meine Projekte</h5>
+                                    <p class="mb-4">Hier finden Sie eine Übersicht meiner Programmierprojekte. Von praktischen Tools bis zu experimentellen Anwendungen ist alles dabei</p><button class="btn btn-light shadow"
+                                        type="button"><i class="bi bi-arrow-right"></i> Zur Projektübersicht</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gy-3 mx-auto bg-dark bg-opacity-25 p-5 rounded-5">
+                            <div class="col-12 col-md-6 col-lg-7 order-md-last"><img
+                                    class="rounded-5 img-fluid object-fit-cover shadow w-100"
+                                    width="1024" height="400" src="assets/img/screenshot_cloud.png" /></div>
+                            <div class="col d-flex align-items-md-center">
+                                <div class="pe-lg-4">
+                                    <h5 class="text-uppercase fw-bold heading">Private Cloud für Screenshots</h5>
+                                    <p class="mb-4">Ein self-hosted Tool das den Upload und die Verwaltung von Screenshots ermöglicht. Ziel ist es, die Kontrolle über eigene Daten zu behalten und Features wunschgerecht zuschneiden zu können.</p><button
+                                        class="btn btn-light shadow" type="button"><i class="bi bi-arrow-right"></i> Zum Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <footer class="footer">

@@ -7,17 +7,17 @@ document.getElementById('logout')?.addEventListener('click', logout);
 
 let picsData = {};
 
-// desc: initial wird erstmal der Cookie geprüft, je nach Ergebnis werden die Bilder geladen oder der Login angezeigt
 async function initApp() {
-  const authStatus = await checkAuth();
-  console.log(authStatus);
-  if (!authStatus.success) {
-    showFeedback(authStatus);
-    initLogin();
-    return;
-  }
-  renderFilter();
-  getPics();
+    const authStatus = await checkAuth();
+    const loginStatusContainer = document.getElementById("loginStatusContainer");
+    if (!authStatus.success) {
+        window.location.href = "/login.html";
+        return;
+    }
+    loginStatusContainer.innerHTML = `<a class="btn btn-info btn-danger shadow" id="logoutButton" role="button" href="#">Abmelden</a>`;
+    document.getElementById('logoutButton')?.addEventListener('click', logout);
+    renderFilter();
+    getPics()
 }
 
 initApp();
@@ -149,65 +149,6 @@ function renderPics(localPics) {
     } else if (e.target.classList.contains("picture-delete-button")) {
       const pictureId = e.target.getAttribute("data-picture-id");
       showCustomConfirm(pictureId);
-    }
-  });
-}
-
-// desc: Zeigt das Loginfenster, wird immer aufgerufen, wenn Cookie nicht stimmt/vorhanden ist
-function initLogin() {
-  filterContainer.innerHTML = "";
-  picContainer.innerHTML = `
-              <div class="row justify-content-center">
-                <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
-                    <div class="shadow-sm">
-                        <div class="card-body p-2">
-                            <form id="loginForm" method="#">
-                                <div class="mb-3">
-                                    <input id="loginUsername" class="form-control form-control-lg" type="text"
-                                        name="username" placeholder="Benutzername" required>
-                                </div>
-                                <div class="mb-4">
-                                    <input id="loginPassword" class="form-control form-control-lg" type="password"
-                                        name="password" placeholder="Passwort" required>
-                                </div>
-                                <div class="d-grid mb-3">
-                                    <button class="btn btn-dark btn-lg" type="submit">
-                                        Anmelden
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-  document.getElementById("loginForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    try {
-      const username = document.getElementById("loginUsername").value.trim();
-      const password = document.getElementById("loginPassword").value;
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await response.json();
-      showFeedback(data);
-      if (data.success) {
-        showFeedback(data);
-        setTimeout(() => {
-          initApp();
-        }, 3500);
-      } else {
-        showFeedback(data);
-        document.getElementById("loginUsername").value = "";
-        document.getElementById("loginPassword").value = "";
-      }
-    } catch (error) {
-      console.error("Login-Fehler:", error);
-      showFeedback({
-        success: false,
-        message: error.message || "Verbindungsfehler..."
-      });
     }
   });
 }

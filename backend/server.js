@@ -136,6 +136,50 @@ app.get("/api/check-auth", authenticateToken, (req, res) => {
   }
 })
 
+// desc: Route um alle Projekte zu laden
+app.get("/api/projects/all", async (req, res) => {
+  try {
+    const connection = await connectToDatabase();
+    const [result] = await connection.execute("SELECT * FROM projects ORDER BY project_id DESC;");
+    await connection.end();
+    res.status(200).json({
+      success: true,
+      message: "Projekte erfolgreich geladen",
+      projects: result
+    });
+  } catch (error) {
+    console.error('Fehler beim Laden der Projekte (/api/projects/all):', error);
+    res.status(500).json({
+      success: false,
+      message: "Fehler beim Laden der Projekte..."
+    });
+  }
+} );
+
+// desc: Projekt hinzufügen Route
+app.post("/api/projects/add", authenticateToken, async (req, res) => {
+  try {
+    const { title, description, status, readmeLink, githubLink, images } = req.body;
+    const connection = await connectToDatabase();
+    const [result] = await connection.execute(
+      "INSERT INTO projects (title, description, status, readmeLink, githubLink, images) VALUES (?, ?, ?, ?, ?, ?);",
+      [title, description, status, readmeLink, githubLink, JSON.stringify(images)]
+    );
+    await connection.end();
+    res.status(201).json({
+      success: true,
+      message: "Projekt erfolgreich hinzugefügt mit der ID " + result.insertId,
+      projectId: result.insertId
+    });
+  } catch (error) {
+    console.error('Fehler beim Hinzufügen des Projekts:', error);
+    res.status(500).json({
+      success: false,
+      message: "Fehler beim Hinzufügen des Projekts"
+    });
+  }
+});
+
 // desc: Bild-Upload Route für ShareX Custom Uploader optimiert
 app.post('/api/pictures/upload', imagesUpload.single('image'), async (req, res) => {
   try {

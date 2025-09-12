@@ -14,6 +14,7 @@ export function showFeedback(result) {
   }
   errorBox.classList.add("show");
   setTimeout(() => {
+    errorText.textContent = "";
     errorBox.classList.remove("show", "alert-danger", "alert-success");
   }, 3000);
 }
@@ -26,10 +27,6 @@ export async function checkAuth() {
     return result;
   } catch (error) {
     console.error("Auth-Fehler:", error);
-    showFeedback({
-      success: false,
-      message: "Verbindungsfehler... Bitte erneut anmelden."
-    });
     return {
       success: false, message: "Verbindungsfehler... Bitte erneut anmelden."
     }

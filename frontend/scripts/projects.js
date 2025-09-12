@@ -43,7 +43,7 @@ function renderProjects(projects) {
         const parsedImages = JSON.parse(project.images);
         col.className = "col-lg-6 mb-5";
         col.innerHTML = `
-                <div class="card bg-dark shadow-sm text-white project-card" style="height: fit-content">
+                <div class="card bg-dark shadow-sm text-white project-card h-100 w-100">
                     <div id="projectCarousel-${project.project_id}" class="carousel slide">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#projectCarousel-${project.project_id}" data-bs-slide-to="0" class="active"

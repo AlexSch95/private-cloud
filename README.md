@@ -109,23 +109,8 @@ docker-compose up -d
 
 ## 🌐 Deployment
 
-Das Projekt ist für Docker-basiertes Deployment optimiert:
+Das Projekt ist für Docker-basiertes Deployment optimiert:  
 
-```yaml
-services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-      - "443:443"
-  backend:
-    build: ./backend
-    volumes:
-      - ./uploads:/app/uploads
-  mysql:
-    image: mysql:8.0
-    volumes:
-      - mysql_data:/var/lib/mysql
-```
+![Visualisierung von Docker-Compose](https://raw.githubusercontent.com/AlexSch95/private-cloud/refs/heads/main/Docker-Compose-Visual.jpg)
 
 Kontakt: 95.schulz@googlemail.com

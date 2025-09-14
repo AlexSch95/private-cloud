@@ -4,10 +4,20 @@ async function initApp() {
     const authStatus = await checkAuth();
     const loginStatusContainer = document.getElementById("loginStatusContainer");
     if (!authStatus.success) {
-        loginStatusContainer.innerHTML = `<a class="btn btn-info btn-danger shadow" role="button" href="/login.html">Anmelden</a>`;
+        loginStatusContainer.innerHTML = `<a class="btn btn-info shadow" role="button" href="/login.html">Anmelden</a>`;
         return;
     }
-    loginStatusContainer.innerHTML = `<a class="btn btn-info btn-danger shadow" id="logoutButton" role="button" href="#">Abmelden</a>`;
+    loginStatusContainer.innerHTML = `
+        <div class="dropdown">
+            <button class="btn btn-info shadow dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Verwalten
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/add-project.html">Projekt hinzufügen</a></li>
+                <li><a class="dropdown-item" href="/pictures.html">Screenshots verwalten</a></li>
+                <li><a class="dropdown-item" id="logoutButton" href="#">Abmelden</a></li>
+            </ul>
+        </div>`;
     document.getElementById('logoutButton')?.addEventListener('click', logout);
 }
 
@@ -30,7 +40,7 @@ async function getProjects() {
         renderProjects(projectsData);
     } catch (error) {
         console.log(errror);
-        showFeedback({success: false, message: error.message})
+        showFeedback({ success: false, message: error.message })
     }
 }
 
@@ -55,19 +65,24 @@ function renderProjects(projects) {
                         </div>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="${parsedImages[0]}" class="d-block w-100" alt="Projekt Bild 1">
+                                <img src="${parsedImages[0]}" class="d-block w-100 projectPic" alt="Projekt Bild 1">
                             </div>
                             <div class="carousel-item">
-                                <img src="${parsedImages[1]}" class="d-block w-100" alt="Projekt Bild 2">
+                                <img src="${parsedImages[1]}" class="d-block w-100 projectPic" alt="Projekt Bild 2">
                             </div>
                             <div class="carousel-item">
-                                <img src="${parsedImages[2]}" class="d-block w-100" alt="Projekt Bild 3">
+                                <img src="${parsedImages[2]}" class="d-block w-100 projectPic" alt="Projekt Bild 3">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel-${project.project_id}"
                             data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Zurück</span>
+                        </button>
+                        <button class="carousel-control-center position-absolute top-50 start-50 translate-middle border-0 bg-transparent text-white fs-3 fullscreenImageBtn"
+                            type="button" id="fullscreenBtn-${project.project_id}">
+                            <i class="bi bi-fullscreen shadow"></i>
+                            <span class="visually-hidden">Vollbild</span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel-${project.project_id}"
                             data-bs-slide="next">
@@ -93,11 +108,18 @@ function renderProjects(projects) {
                     </div>
                 </div>
                 `;
-                projectContainer.appendChild(col);
+        projectContainer.appendChild(col);
     });
 }
 
-document.addEventListener("click", function(event) {
+// document.addEventListener("click", function (event) {
+//     if (event.target.classList.contains("projectPic")) {
+//         picLink = event.target.src
+        
+//     }
+// });
+
+document.addEventListener("click", function (event) {
     let target = event.target;
     let linkElement = target.closest('a[data-readme]');
 
@@ -110,33 +132,89 @@ document.addEventListener("click", function(event) {
 
 
 async function openReadmeModal(readmeLink) {
-    console.log(readmeLink);
-  const readmeContentDiv = document.getElementById("readmeContent");
-  const readmeModal = document.getElementById("readmeModal");
-  const modalBackdrop = document.getElementById("modalBackdrop");
-  if (!readmeLink) {
-    showFeedback({ success: false, message: "Kein Link zur README.md angegeben." });
-    return;
-  }
-  try {
-    const response = await fetch(readmeLink);
-    console.log(response);
-    if (!response.ok) {
-      throw new Error("Fehler beim Laden der README.md");
+    const readmeContentDiv = document.getElementById("readmeContent");
+    const readmeModal = document.getElementById("readmeModal");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    if (!readmeLink) {
+        showFeedback({ success: false, message: "Kein Link zur README.md angegeben." });
+        return;
     }
-    const readmeContent = await response.text();
-    console.log(readmeContent);
-    readmeContentDiv.innerHTML = marked.parse(readmeContent);
-    readmeModal.classList.add("show");
-    modalBackdrop.classList.add("show");
-  } catch (error) {
-    showFeedback({ success: false, message: "Bitte README Link überprüfen" });
-  }
+    try {
+        const response = await fetch(readmeLink);
+        console.log(response);
+        if (!response.ok) {
+            throw new Error("Fehler beim Laden der README.md");
+        }
+        const readmeContent = await response.text();
+        readmeContentDiv.innerHTML = marked.parse(readmeContent);
+        readmeModal.classList.add("show");
+        modalBackdrop.classList.add("show");
+    } catch (error) {
+        showFeedback({ success: false, message: "Bitte README Link überprüfen" });
+    }
 };
 
 document.getElementById("readmeModalCloseBtn").addEventListener("click", () => {
-  document.getElementById("readmeModal").classList.remove("show");
-  document.getElementById("modalBackdrop").classList.remove("show");
-  const readmeContentDiv = document.getElementById("readmeContent");
-  readmeContentDiv.innerHTML = "";
+    document.getElementById("readmeModal").classList.remove("show");
+    document.getElementById("modalBackdrop").classList.remove("show");
+    const readmeContentDiv = document.getElementById("readmeContent");
+    readmeContentDiv.innerHTML = "";
 });
+
+document.addEventListener("click", function (event) {
+    const fullscreenBtn = event.target.closest('.fullscreenImageBtn');
+    if (fullscreenBtn) {
+        const projectId = fullscreenBtn.id.split('-')[1];
+        const project = projectsData.find(p => p.project_id === parseInt(projectId));
+        openCarouselModal(project);
+    }
+});
+
+function openCarouselModal(project) {
+    const modalHtml = `
+        <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="min-vh-100 d-flex align-items-center justify-content-center">
+                        <div id="modalCarousel-${project.project_id}" class="carousel slide" style="max-width: 80vw;">
+                            <div class="carousel-indicators">
+                                ${JSON.parse(project.images).map((_, index) => `
+                                    <button type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide-to="${index}" 
+                                        class="${index === 0 ? 'active' : ''}" aria-label="Slide ${index + 1}"></button>
+                                `).join('')}
+                            </div>
+                            <div class="carousel-inner h-100">
+                                <button type="button" class="btn btn-info position-absolute top-0 end-0 m-3" 
+                                    style="z-index: 1050;" data-bs-dismiss="modal" aria-label="Close">Schließen</button>
+                                ${JSON.parse(project.images).map((img, index) => `
+                                    <div class="carousel-item h-100 ${index === 0 ? 'active' : ''}">
+                                        <img src="${img}" class="d-block mx-auto h-100" style="object-fit: contain;" alt="Projekt Bild ${index + 1}">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Zurück</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Weiter</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Entferne existierendes Modal falls vorhanden
+    const existingModal = document.getElementById('carouselModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Füge neues Modal hinzu und zeige es an
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById('carouselModal'));
+    modal.show();
+}

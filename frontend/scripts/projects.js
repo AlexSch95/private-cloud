@@ -174,9 +174,9 @@ function openCarouselModal(project) {
     const modalHtml = `
         <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content bg-transparent border-0">
-                    <div class="min-vh-100 d-flex align-items-center justify-content-center">
-                        <div id="modalCarousel-${project.project_id}" class="carousel slide" style="max-width: 80vw;">
+                <div class="modal-content bg-transparent border-0 h-100 d-flex align-items-center justify-content-center">
+                    <div style="max-height: 90vh; max-width: 90vw;">
+                        <div id="modalCarousel-${project.project_id}" class="carousel slide">
                             <div class="carousel-indicators">
                                 ${JSON.parse(project.images).map((_, index) => `
                                     <button type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide-to="${index}" 

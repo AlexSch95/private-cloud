@@ -84,6 +84,21 @@ body {
   justify-content: flex-end;
 }
 
+.btn-carousel-modal {
+  border-radius: 50%;
+  background-color: rgb(0, 191, 255);
+  backdrop-filter: blur(10px);
+  border: none;
+  color: white;
+  transition: all var(--transition-speed);
+}
+
+.btn-carousel-modal:hover {
+  background-color: rgb(120, 221, 255);
+  transform: translateY(-3px);
+}
+
+
 .btn-action {
   width: 40px;
   height: 40px;

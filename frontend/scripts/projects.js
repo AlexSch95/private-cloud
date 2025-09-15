@@ -174,9 +174,9 @@ function openCarouselModal(project) {
     const modalHtml = `
         <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content bg-transparent border-0 h-100 d-flex align-items-center justify-content-center">
-                    <div style="max-height: 90vh; max-width: 90vw;">
-                        <div id="modalCarousel-${project.project_id}" class="carousel slide">
+                <div class="modal-content border-0 h-100 d-flex align-items-center justify-content-center" style="background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);">
+                    <div style="width: 80vw; height: 80vh;">
+                        <div id="modalCarousel-${project.project_id}" class="carousel slide h-100">
                             <div class="carousel-indicators">
                                 ${JSON.parse(project.images).map((_, index) => `
                                     <button type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide-to="${index}" 
@@ -184,11 +184,15 @@ function openCarouselModal(project) {
                                 `).join('')}
                             </div>
                             <div class="carousel-inner h-100">
-                                <button type="button" class="btn btn-info position-absolute top-0 end-0 m-3" 
-                                    style="z-index: 1050;" data-bs-dismiss="modal" aria-label="Close">Schließen</button>
+                                <button type="button" class="btn btn-carousel-modal position-absolute top-0 start-50 translate-middle-x mt-3" 
+                                    style="z-index: 1050;" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
                                 ${JSON.parse(project.images).map((img, index) => `
                                     <div class="carousel-item h-100 ${index === 0 ? 'active' : ''}">
-                                        <img src="${img}" class="d-block mx-auto h-100" style="object-fit: contain;" alt="Projekt Bild ${index + 1}">
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <img src="${img}" style="max-width: 80vw; max-height: 80vh; width: auto; height: auto; object-fit: contain;" alt="Projekt Bild ${index + 1}">
+                                        </div>
                                     </div>
                                 `).join('')}
                             </div>

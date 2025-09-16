@@ -136,7 +136,7 @@ document.addEventListener("click", function (event) {
 async function openReadmeModal(readmeLink) {
     const modalHtml = `
         <div class="modal fade" id="readmeModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable w-75 mx-auto">
                 <div class="modal-content bg-dark text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">README.md</h5>

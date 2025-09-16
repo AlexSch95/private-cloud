@@ -39,7 +39,7 @@ async function getProjects() {
         projectsData = responseFromApi.projects;
         renderProjects(projectsData);
     } catch (error) {
-        console.log(errror);
+        console.log(error);
         showFeedback({ success: false, message: error.message })
     }
 }
@@ -50,29 +50,29 @@ function renderProjects(projects) {
     projects.forEach((project) => {
         const col = document.createElement("div");
         console.log(project.images);
+        console.log(project.techstack);
         const parsedImages = JSON.parse(project.images);
+        const technologies = JSON.parse(project.techstack);
         col.className = "col-lg-6 mb-5";
         col.innerHTML = `
-                <div class="card bg-dark shadow-sm text-white project-card h-100 w-100">
+                <div class="card bg-dark shadow-sm text-white project-card h-100 w-100 rounded-3">
                     <div id="projectCarousel-${project.project_id}" class="carousel slide">
                         <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#projectCarousel-${project.project_id}" data-bs-slide-to="0" class="active"
-                                aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#projectCarousel-${project.project_id}" data-bs-slide-to="1"
-                                aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#projectCarousel-${project.project_id}" data-bs-slide-to="2"
-                                aria-label="Slide 3"></button>
+                            ${parsedImages.map((_, index) => `
+                                <button type="button" data-bs-target="#projectCarousel-${project.project_id}" 
+                                    data-bs-slide-to="${index}" 
+                                    class="${index === 0 ? 'active' : ''}"
+                                    aria-current="${index === 0 ? 'true' : 'false'}"
+                                    aria-label="Slide ${index + 1}">
+                                </button>
+                            `).join('')}
                         </div>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="${parsedImages[0]}" class="d-block w-100 projectPic" alt="Projekt Bild 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="${parsedImages[1]}" class="d-block w-100 projectPic" alt="Projekt Bild 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="${parsedImages[2]}" class="d-block w-100 projectPic" alt="Projekt Bild 3">
-                            </div>
+                            ${parsedImages.map((img, index) => `
+                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                    <img src="${img}" class="d-block w-100 projectPic" alt="Projekt Bild ${index + 1}">
+                                </div>
+                            `).join('')}
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel-${project.project_id}"
                             data-bs-slide="prev">
@@ -93,17 +93,20 @@ function renderProjects(projects) {
                     <div class="card-body d-flex flex-column">
                         <div class="row">
 
-                            <h5 class="card-title col" id="previewTitle-${project.project_id}">${project.title}</h5><small
+                            <h4 class="col mb-4" id="previewTitle-${project.project_id}">${project.title}</h4><small
                                 class="mb-2 text-end col" id="previewStatus-${project.project_id}">${project.status}</small>
                         </div>
                         <p class="card-text" id="previewDescription-${project.project_id}">${project.description}</p>
+                        <hr>
+                        <p class="card-text">Technologien:</p>
+                        <span class="text-white" class="techstack">${technologies.map(tech => `<span class="badge btn btn-outline-info me-2 mb-2 rounded-5 shadow p-2">${tech}</span>`).join("")}</span>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-end social-icons gap-2">
-                            <a href="" data-readme="${project.readmeLink}" aria-label="ProjectInfo" id="previewProjectInfoLink-${project.project_id}"><i
-                                    class="bi bi-info-circle"></i></a>
-                            <a href="${project.githubLink}" aria-label="GitHub" id="previewGithubLink-${project.project_id}"><i
-                                    class="fab fa-github text-white"></i></a>
+                            ${project.readmeLink.length > 0 ? `<a href="" data-readme="${project.readmeLink}" aria-label="ProjectInfo" id="previewProjectInfoLink-${project.project_id}"><i
+                                    class="bi bi-info-circle"></i></a>` : ``}
+                            ${project.githubLink.length > 0 ? `<a href="${project.githubLink}" aria-label="GitHub" id="previewGithubLink-${project.project_id}"><i
+                                    class="fab fa-github text-white"></i></a>` : ``}
                         </div>
                     </div>
                 </div>
@@ -111,13 +114,6 @@ function renderProjects(projects) {
         projectContainer.appendChild(col);
     });
 }
-
-// document.addEventListener("click", function (event) {
-//     if (event.target.classList.contains("projectPic")) {
-//         picLink = event.target.src
-        
-//     }
-// });
 
 document.addEventListener("click", function (event) {
     let target = event.target;

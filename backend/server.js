@@ -160,7 +160,6 @@ app.get("/api/projects/all", async (req, res) => {
 app.post("/api/projects/add", authenticateToken, async (req, res) => {
   try {
     const { title, description, status, readmeLink, githubLink, images, techstack } = req.body;
-    console.log(req.body.techstack);
     const connection = await connectToDatabase();
     const [result] = await connection.execute(
       "INSERT INTO projects (title, description, status, readmeLink, githubLink, images, techstack) VALUES (?, ?, ?, ?, ?, ?, ?);",

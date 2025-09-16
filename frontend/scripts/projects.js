@@ -56,40 +56,46 @@ function renderProjects(projects) {
         col.className = "col-lg-6 mb-5";
         col.innerHTML = `
                 <div class="card bg-dark shadow-sm text-white project-card h-100 w-100 rounded-3">
-                    <div id="projectCarousel-${project.project_id}" class="carousel slide">
-                        <div class="carousel-indicators">
-                            ${parsedImages.map((_, index) => `
-                                <button type="button" data-bs-target="#projectCarousel-${project.project_id}" 
-                                    data-bs-slide-to="${index}" 
-                                    class="${index === 0 ? 'active' : ''}"
-                                    aria-current="${index === 0 ? 'true' : 'false'}"
-                                    aria-label="Slide ${index + 1}">
-                                </button>
-                            `).join('')}
-                        </div>
-                        <div class="carousel-inner">
-                            ${parsedImages.map((img, index) => `
-                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                    <img src="${img}" class="d-block w-100 projectPic" alt="Projekt Bild ${index + 1}">
-                                </div>
-                            `).join('')}
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel-${project.project_id}"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Zurück</span>
-                        </button>
-                        <button class="carousel-control-center position-absolute top-50 start-50 translate-middle border-0 bg-transparent text-white fs-3 fullscreenImageBtn"
-                            type="button" id="fullscreenBtn-${project.project_id}">
-                            <i class="bi bi-fullscreen shadow"></i>
-                            <span class="visually-hidden">Vollbild</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel-${project.project_id}"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Weiter</span>
-                        </button>
-                    </div>
+                    ${parsedImages.length === 1 
+                        ? 
+                        `<div class="carousel-inner">
+                        <img src="${parsedImages[0]}" class="d-block w-100 projectPic" alt="Projekt Bild 1">
+                        </div>` 
+                        : 
+                        `<div id="projectCarousel-${project.project_id}" class="carousel slide">
+                            <div class="carousel-indicators">
+                                ${parsedImages.map((_, index) => `
+                                    <button type="button" data-bs-target="#projectCarousel-${project.project_id}" 
+                                        data-bs-slide-to="${index}" 
+                                        class="${index === 0 ? 'active' : ''}"
+                                        aria-current="${index === 0 ? 'true' : 'false'}"
+                                        aria-label="Slide ${index + 1}">
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div class="carousel-inner">
+                                ${parsedImages.map((img, index) => `
+                                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                        <img src="${img}" class="d-block w-100 projectPic" alt="Projekt Bild ${index + 1}">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel-${project.project_id}"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Zurück</span>
+                            </button>
+                            <button class="carousel-control-center position-absolute top-50 start-50 translate-middle border-0 bg-transparent text-white fs-3 fullscreenImageBtn"
+                                type="button" id="fullscreenBtn-${project.project_id}">
+                                <i class="bi bi-fullscreen shadow"></i>
+                                <span class="visually-hidden">Vollbild</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel-${project.project_id}"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Weiter</span>
+                            </button>
+                        </div>`}
                     <div class="card-body d-flex flex-column">
                         <div class="row">
 
@@ -128,33 +134,62 @@ document.addEventListener("click", function (event) {
 
 
 async function openReadmeModal(readmeLink) {
+    const modalHtml = `
+        <div class="modal fade" id="readmeModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">README.md</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="readmeContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Entferne existierendes Modal falls vorhanden
+    const existingModal = document.getElementById('readmeModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Füge neues Modal hinzu
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
     const readmeContentDiv = document.getElementById("readmeContent");
-    const readmeModal = document.getElementById("readmeModal");
-    const modalBackdrop = document.getElementById("modalBackdrop");
+    
     if (!readmeLink) {
         showFeedback({ success: false, message: "Kein Link zur README.md angegeben." });
         return;
     }
+
     try {
         const response = await fetch(readmeLink);
-        console.log(response);
         if (!response.ok) {
             throw new Error("Fehler beim Laden der README.md");
         }
         const readmeContent = await response.text();
         readmeContentDiv.innerHTML = marked.parse(readmeContent);
-        readmeModal.classList.add("show");
-        modalBackdrop.classList.add("show");
+        
+        // Modal erstellen und anzeigen
+        const modal = new bootstrap.Modal(document.getElementById('readmeModal'));
+        modal.show();
     } catch (error) {
         showFeedback({ success: false, message: "Bitte README Link überprüfen" });
     }
-};
+}
 
-document.getElementById("readmeModalCloseBtn").addEventListener("click", () => {
-    document.getElementById("readmeModal").classList.remove("show");
-    document.getElementById("modalBackdrop").classList.remove("show");
-    const readmeContentDiv = document.getElementById("readmeContent");
-    readmeContentDiv.innerHTML = "";
+document.addEventListener("click", function(event) {
+    if (event.target.closest('[data-bs-dismiss="modal"]')) {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('readmeModal'));
+        if (modal) {
+            modal.hide();
+            document.getElementById('readmeModal').remove();
+        }
+    }
 });
 
 document.addEventListener("click", function (event) {

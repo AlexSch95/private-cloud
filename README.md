@@ -6,12 +6,13 @@ Eine selbst gehostete Cloud-Lösung für die sichere Speicherung und Verwaltung 
 ## ✨ Hauptfunktionen
 - 🔐 Sicheres Login-System mit JWT-Authentifizierung
 - 🖼️ Responsive Bildergalerie
-- 🔍 Echtzeit-Suchfunktion
-- 📱 Mobile-First Design
+- 🔍 Echtzeit-Suchfunktion innerhalb der Bildergalerie
 - 🌓 Dark Mode
 - 🔄 Direkte Bildvorschau
 - 📋 One-Click Link Sharing
 - 🗑️ Sicheres Löschen mit Bestätigung
+- 👀 Projektübersicht
+- ⚙️ Verwaltung der hinterlegten Projekte
 
 ## 🛠️ Technologie-Stack
 

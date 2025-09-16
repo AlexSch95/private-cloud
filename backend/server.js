@@ -20,7 +20,7 @@ app.use(cors());
 
 // desc: Directories werden festgelegt und konstanten aus .env geladen
 const IMAGE_DIRECTORY = '/app/uploads/images';
-const CLIPS_DIRECTORY = '/app/uploads/clips';
+const PROJECTIMAGE_DIRECTORY = '/app/uploads/projectimages';
 const secretKey = process.env.JWT_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
@@ -220,6 +220,7 @@ app.delete('/api/pictures/delete/:id', authenticateToken, async (req, res) => {
 
 // desc: ermöglicht direct URL zu den Bildern
 app.use('/images', express.static(IMAGE_DIRECTORY));
+app.use('/projectimages', express.static(PROJECTIMAGE_DIRECTORY));
 
 // desc: Route um alle Bilder zu laden
 app.get("/api/pictures/all", authenticateToken, async (req, res) => {

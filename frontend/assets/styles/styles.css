@@ -12,11 +12,21 @@ body {
   color: #ecf0f1;
 }
 
+
 .gallery-title {
   text-align: center;
   margin-bottom: 2rem;
   color: var(--dark-color);
   font-weight: 700;
+}
+
+.card {
+  transition: 0.3s ease all;
+  animation: fadeIn 0.8s ease;
+}
+
+.container {
+  animation: fadeIn 0.8s ease;
 }
 
 .card-container {
@@ -82,6 +92,29 @@ body {
   display: flex;
   gap: 0.8rem;
   justify-content: flex-end;
+}
+
+.project-mini-card:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+  transition: 0.3s ease all;
+  cursor: pointer;
+}
+
+.mini-card-imagediv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.mini-card-imagediv img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .btn-carousel-modal {
@@ -207,6 +240,7 @@ body {
 }
 
 @media (max-width: 1200px) {
+
   .carousel-inner,
   .carousel-item img {
     height: 250px;
@@ -217,6 +251,7 @@ body {
   .project-card {
     transform: none;
   }
+
   .project-card:hover {
     transform: none;
   }
@@ -299,7 +334,7 @@ body {
 }
 
 .fullscreenImageBtn i {
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .social-icons a {
@@ -364,14 +399,13 @@ body {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
+
 
 @keyframes fadeOut {
   from {
@@ -482,4 +516,31 @@ body {
 
 .modal-close-btn:hover {
   color: #fff;
+}
+
+.maximizeProject-carousel-container {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  /* 16:9 Aspect Ratio */
+  position: relative;
+}
+
+.maximizeProject-carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.maximizeProject-carousel-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
 }

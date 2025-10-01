@@ -26,6 +26,7 @@ initApp();
 
 // desc: Container def
 const projectContainer = document.getElementById("projectContainer");
+const maximizedProjectContainer = document.getElementById("maximizedProjectContainer");
 let projectsData = [];
 
 getProjects();
@@ -35,7 +36,6 @@ async function getProjects() {
         const response = await fetch(`/api/projects/all`);
         const data = await response.json();
         const responseFromApi = data
-        showFeedback(responseFromApi);
         projectsData = responseFromApi.projects;
         renderProjects(projectsData);
     } catch (error) {
@@ -49,20 +49,77 @@ function renderProjects(projects) {
     projectContainer.innerHTML = "";
     projects.forEach((project) => {
         const col = document.createElement("div");
-        console.log(project.images);
-        console.log(project.techstack);
         const parsedImages = JSON.parse(project.images);
-        const technologies = JSON.parse(project.techstack);
         col.className = "col-lg-6 mb-5";
         col.innerHTML = `
-                <div class="card bg-dark shadow-sm text-white project-card h-100 w-100 rounded-3">
-                    ${parsedImages.length === 1 
-                        ? 
-                        `<div class="carousel-inner">
-                        <img src="${parsedImages[0]}" class="d-block w-100 projectPic" alt="Projekt Bild 1">
-                        </div>` 
-                        : 
-                        `<div id="projectCarousel-${project.project_id}" class="carousel slide">
+            <div class="card bg-dark shadow-sm text-white project-card h-100 w-100 rounded-3 project-mini-card" data-projectid="${project.project_id}">
+                <!-- Bild oben, nimmt volle Breite ein und bleibt komplett sichtbar -->
+                <div class="w-100 mini-card-imagediv">
+                    <img 
+                        src="${parsedImages[0]}" 
+                        class="projectPic"
+                        alt="Projekt Bild"
+                    >
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="row">
+                        <h4 class="col mb-4" id="previewTitle-${project.project_id}">${project.title}</h4>
+                    </div>
+                    <p class="card-text" id="previewDescription-${project.project_id}">${project.description}</p>
+                </div>
+            </div>
+        `;
+        projectContainer.appendChild(col);
+    });
+}
+
+projectContainer.addEventListener("click", function (event) {
+    let target = event.target;
+    let card = target.closest(".project-mini-card")
+    let dataProjectId = card.dataset.projectid;
+
+    if (dataProjectId) {
+        event.stopPropagation();
+        event.preventDefault();
+        const projectId = dataProjectId;
+        const project = projectsData.find(p => p.project_id === parseInt(projectId));
+        projectMaximize(project);
+    }
+});
+
+async function getReadmeContent(readmeLink) {
+    try {
+        const response = await fetch(readmeLink);
+        if (!response.ok) {
+            throw new Error("Fehler beim Laden der README.md");
+        }
+        const readmeContent = await response.text();
+        return marked.parse(readmeContent);
+    } catch (error) {
+        showFeedback({ success: false, message: "Bitte README Link überprüfen" });
+    }
+}
+
+async function projectMaximize(project) {
+    projectContainer.innerHTML = "";
+    const parsedImages = JSON.parse(project.images);
+    const technologies = JSON.parse(project.techstack);
+    const readmeContent = await getReadmeContent(project.readmeLink);
+    maximizedProjectContainer.innerHTML = `
+                <div class="card bg-dark shadow-sm text-white project-card h-100 w-75 rounded-3 mx-auto">
+                        <div class="card-header d-flex align-items-center">
+                        <button type="button" class="btn btn-link text-white p-0 me-2" style="font-size:1.5rem;" id="backButton">
+                            <i class="bi bi-arrow-left"></i>
+                        </button>
+                        <span class="fw-bold">${project.title}</span>
+                    </div>
+                    ${parsedImages.length === 1
+            ?
+            `<div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
+                        <img src="${parsedImages[0]}" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
+                        </div>`
+            :
+            `<div id="projectCarousel-${project.project_id}" class="carousel slide">
                             <div class="carousel-indicators">
                                 ${parsedImages.map((_, index) => `
                                     <button type="button" data-bs-target="#projectCarousel-${project.project_id}" 
@@ -73,10 +130,10 @@ function renderProjects(projects) {
                                     </button>
                                 `).join('')}
                             </div>
-                            <div class="carousel-inner">
+                            <div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
                                 ${parsedImages.map((img, index) => `
-                                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                        <img src="${img}" class="d-block w-100 projectPic" alt="Projekt Bild ${index + 1}">
+                                    <div class="carousel-item ${index === 0 ? 'active' : ''}" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                                        <img src="${img}" class="d-block projectPic" style="width:100%;height:100%;object-fit:contain;display:block;margin:auto;position:absolute;top:0;left:0;" alt="Projekt Bild ${index + 1}">
                                     </div>
                                 `).join('')}
                             </div>
@@ -102,95 +159,25 @@ function renderProjects(projects) {
                             <h4 class="col mb-4" id="previewTitle-${project.project_id}">${project.title}</h4><small
                                 class="mb-2 text-end col" id="previewStatus-${project.project_id}">${project.status}</small>
                         </div>
-                        <p class="card-text" id="previewDescription-${project.project_id}">${project.description}</p>
+                        <p class="card-text" id="previewDescription-${project.project_id}">${readmeContent}</p>
                         <hr>
                         <p class="card-text">Technologien:</p>
                         <span class="text-white" class="techstack">${technologies.map(tech => `<span class="badge btn btn-outline-info me-2 mb-2 rounded-5 shadow p-2">${tech}</span>`).join("")}</span>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-end social-icons gap-2">
-                            ${project.readmeLink.length > 0 ? `<a href="" data-readme="${project.readmeLink}" aria-label="ProjectInfo" id="previewProjectInfoLink-${project.project_id}"><i
-                                    class="bi bi-info-circle"></i></a>` : ``}
                             ${project.githubLink.length > 0 ? `<a href="${project.githubLink}" aria-label="GitHub" id="previewGithubLink-${project.project_id}"><i
                                     class="fab fa-github text-white"></i></a>` : ``}
                         </div>
                     </div>
                 </div>
                 `;
-        projectContainer.appendChild(col);
-    });
+    document.getElementById("backButton").addEventListener("click", function (event) {
+        maximizedProjectContainer.innerHTML = "";
+        getProjects();
+    })
 }
 
-document.addEventListener("click", function (event) {
-    let target = event.target;
-    let linkElement = target.closest('a[data-readme]');
-
-    if (linkElement) {
-        event.stopPropagation();
-        event.preventDefault();
-        openReadmeModal(linkElement.getAttribute('data-readme'));
-    }
-})
-
-
-async function openReadmeModal(readmeLink) {
-    const modalHtml = `
-        <div class="modal fade" id="readmeModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable w-75 mx-auto">
-                <div class="modal-content bg-dark text-white">
-                    <div class="modal-header">
-                        <h5 class="modal-title">README.md</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="readmeContent"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Entferne existierendes Modal falls vorhanden
-    const existingModal = document.getElementById('readmeModal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-
-    // Füge neues Modal hinzu
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    const readmeContentDiv = document.getElementById("readmeContent");
-    
-    if (!readmeLink) {
-        showFeedback({ success: false, message: "Kein Link zur README.md angegeben." });
-        return;
-    }
-
-    try {
-        const response = await fetch(readmeLink);
-        if (!response.ok) {
-            throw new Error("Fehler beim Laden der README.md");
-        }
-        const readmeContent = await response.text();
-        readmeContentDiv.innerHTML = marked.parse(readmeContent);
-        
-        // Modal erstellen und anzeigen
-        const modal = new bootstrap.Modal(document.getElementById('readmeModal'));
-        modal.show();
-    } catch (error) {
-        showFeedback({ success: false, message: "Bitte README Link überprüfen" });
-    }
-}
-
-document.addEventListener("click", function(event) {
-    if (event.target.closest('[data-bs-dismiss="modal"]')) {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('readmeModal'));
-        if (modal) {
-            modal.hide();
-            document.getElementById('readmeModal').remove();
-        }
-    }
-});
 
 document.addEventListener("click", function (event) {
     const fullscreenBtn = event.target.closest('.fullscreenImageBtn');

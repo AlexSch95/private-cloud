@@ -26,10 +26,10 @@ export async function checkAuth() {
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error("Auth-Fehler:", error);
+    console.error("Fehler bei der Authentifizierung:", error);
     return {
       success: false, message: "Verbindungsfehler... Bitte erneut anmelden."
-    }
+    };
   }
 }
 
@@ -45,10 +45,11 @@ export async function logout() {
       }, 3000);
     }
   } catch (error) {
-    console.error("Logout-Fehler:", error);
+    console.error("Fehler beim Abmelden:", error);
     showFeedback({
       success: false,
-      message: "Verbindungsfehler... Abmeldung nicht möglich. Seite wird neu geladen."
+      message: "Verbindungsfehler... Abmeldung nicht möglich. Seite wird neu geladen.",
+      error: error.message
     });
     setTimeout(() => {
       window.location.reload();

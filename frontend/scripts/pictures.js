@@ -3,18 +3,18 @@ import { showFeedback, checkAuth, logout } from "./sharedFunctions.js";
 
 const picContainer = document.getElementById("picContainer");
 const filterContainer = document.getElementById("filterContainer");
-document.getElementById('logout')?.addEventListener('click', logout);
+document.getElementById("logout")?.addEventListener("click", logout);
 
 let picsData = {};
 
 async function initApp() {
-    const authStatus = await checkAuth();
-    const loginStatusContainer = document.getElementById("loginStatusContainer");
-    if (!authStatus.success) {
-        window.location.href = "/login.html";
-        return;
-    }
-    loginStatusContainer.innerHTML = `
+  const authStatus = await checkAuth();
+  const loginStatusContainer = document.getElementById("loginStatusContainer");
+  if (!authStatus.success) {
+    window.location.href = "/login.html";
+    return;
+  }
+  loginStatusContainer.innerHTML = `
         <div class="dropdown">
             <button class="btn btn-info shadow dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Verwalten
@@ -25,9 +25,9 @@ async function initApp() {
                 <li><a class="dropdown-item" id="logoutButton" href="#">Abmelden</a></li>
             </ul>
         </div>`;
-    document.getElementById('logoutButton')?.addEventListener('click', logout);
-    renderFilter();
-    getPics()
+  document.getElementById("logoutButton")?.addEventListener("click", logout);
+  renderFilter();
+  getPics();
 }
 
 initApp();
@@ -38,42 +38,39 @@ let currentPictureId = null;
 // desc: Modal für Löschbestätigung
 function showCustomConfirm(pictureId) {
   currentPictureId = pictureId;
-  document.getElementById('customConfirm').style.display = 'block';
+  document.getElementById("customConfirm").style.display = "block";
 }
 
-document.getElementById('confirmYes').addEventListener('click', function () {
+document.getElementById("confirmYes").addEventListener("click", function () {
   deletePic(currentPictureId);
-  document.getElementById('customConfirm').style.display = 'none';
+  document.getElementById("customConfirm").style.display = "none";
 });
 
-document.getElementById('confirmNo').addEventListener('click', function () {
-  console.log("Löschen abgebrochen");
+document.getElementById("confirmNo").addEventListener("click", function () {
   showFeedback({
     success: false,
     message: "Löschen abgebrochen"
   });
-  document.getElementById('customConfirm').style.display = 'none';
+  document.getElementById("customConfirm").style.display = "none";
 });
 
 // desc: lädt alle vorhandenen Bilder aus der DB
 async function getPics() {
   try {
-    const response = await fetch(`/api/pictures/all`);
+    const response = await fetch("/api/pictures/all");
     const data = await response.json();
     const responseFromApi = data;
     showFeedback(responseFromApi);
     picsData = responseFromApi.pictures;
-    console.log(picsData);
     renderPics(picsData);
   } catch (error) {
-    console.log(error);
-    showFeedback({ success: false, message: error.message });
+    console.error("Fehler beim Laden der Bilder:", error);
+    showFeedback({ success: false, message: "Fehler beim Laden der Bilder" });
   }
 }
 
 //desc: Löschfunktion für Bilder nach bestätigung des Modals
 async function deletePic(pictureId) {
-  console.log(pictureId);
   try {
     const response = await fetch(`/api/pictures/delete/${pictureId}`, {
       method: "DELETE"
@@ -86,8 +83,8 @@ async function deletePic(pictureId) {
       getPics();
     }, 3000);
   } catch (error) {
-    console.log(error);
-    showFeedback({ success: false, message: error.message });
+    console.error("Fehler beim Löschen des Bildes:", error);
+    showFeedback({ success: false, message: "Fehler beim Löschen des Bildes" });
   }
 }
 
@@ -95,7 +92,7 @@ async function deletePic(pictureId) {
 function filterPics() {
   const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
   const filteredPics = picsData.filter((pic) =>
-    Object.values(pic).some(value => typeof value === 'string' && value.toLowerCase().includes(searchInput))
+    Object.values(pic).some(value => typeof value === "string" && value.toLowerCase().includes(searchInput))
   );
   renderPics(filteredPics);
 };
@@ -155,7 +152,7 @@ function renderPics(localPics) {
       showFeedback({
         success: true,
         message: "Der Link wurde in die Zwischenablage kopiert"
-      })
+      });
     } else if (e.target.classList.contains("picture-delete-button")) {
       const pictureId = e.target.getAttribute("data-picture-id");
       showCustomConfirm(pictureId);

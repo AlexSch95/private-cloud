@@ -19,7 +19,7 @@ async function initApp() {
   const authStatus = await checkAuth();
   const loginStatusContainer = document.getElementById("loginStatusContainer");
   if (!authStatus.success) {
-    window.location.href = "/login.html"
+    window.location.href = "/login.html";
     return;
   }
   loginStatusContainer.innerHTML = `
@@ -33,7 +33,7 @@ async function initApp() {
                 <li><a class="dropdown-item" id="logoutButton" href="#">Abmelden</a></li>
             </ul>
         </div>`;
-  document.getElementById('logoutButton')?.addEventListener('click', logout);
+  document.getElementById("logoutButton")?.addEventListener("click", logout);
   renderPreview();
 }
 
@@ -57,18 +57,18 @@ function renderPreview() {
                             ${project.images.map((_, index) => `
                                 <button type="button" data-bs-target="#projectCarousel" 
                                     data-bs-slide-to="${index}" 
-                                    class="${index === 0 ? 'active' : ''}"
-                                    aria-current="${index === 0 ? 'true' : 'false'}"
+                                    class="${index === 0 ? "active" : ""}"
+                                    aria-current="${index === 0 ? "true" : "false"}"
                                     aria-label="Slide ${index + 1}">
                                 </button>
-                            `).join('')}
+                            `).join("")}
                         </div>
                         <div class="carousel-inner">
                             ${project.images.map((img, index) => `
-                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                <div class="carousel-item ${index === 0 ? "active" : ""}">
                                     <img src="${img}" class="d-block w-100 projectPic" alt="Projekt Bild ${index + 1}">
                                 </div>
-                            `).join('')}
+                            `).join("")}
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel"
                             data-bs-slide="prev">
@@ -140,27 +140,27 @@ function updatePreview() {
   project.githubLink = inputGitHub.value;
   project.images = selectedImages.length > 0 ? selectedImages : ["/assets/img/placeholder.jpg", "/assets/img/placeholder.jpg", "/assets/img/placeholder.jpg"];
   project.techstack = selectedTechstack.length > 0 ? selectedTechstack : ["Platzhalter1", "Platzhalter2", "Platzhalter3"];
-  console.log(project);
   renderPreview();
 }
 
 document.getElementById("addProject").addEventListener("click", async (event) => {
   event.preventDefault();
   try {
-    const response = await fetch('/api/projects/add', {
-      method: 'POST',
+    const response = await fetch("/api/projects/add", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(project)
     });
     if (!response.ok) {
-      throw new Error('Fehler beim Hinzufügen des Projekts');
+      throw new Error("Fehler beim Hinzufügen des Projekts");
     }
     const result = await response.json();
     showFeedback(result);
   } catch (error) {
-    showFeedback({ success: false, message: error.message });
+    console.error("Fehler beim Hinzufügen des Projekts:", error);
+    showFeedback({ success: false, message: "Fehler beim Hinzufügen des Projekts" });
   }
 });
 
@@ -184,6 +184,7 @@ function readmeModalRegister() {
       readmeModal.classList.add("show");
       modalBackdrop.classList.add("show");
     } catch (error) {
+      console.error("Fehler beim Laden der README.md:", error);
       showFeedback({ success: false, message: "Bitte README Link überprüfen" });
     }
   });

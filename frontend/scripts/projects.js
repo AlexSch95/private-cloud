@@ -1,13 +1,13 @@
 import { showFeedback, checkAuth, logout } from "./sharedFunctions.js";
 
 async function initApp() {
-    const authStatus = await checkAuth();
-    const loginStatusContainer = document.getElementById("loginStatusContainer");
-    if (!authStatus.success) {
-        loginStatusContainer.innerHTML = `<a class="btn btn-info shadow" role="button" href="/login.html">Anmelden</a>`;
-        return;
-    }
-    loginStatusContainer.innerHTML = `
+  const authStatus = await checkAuth();
+  const loginStatusContainer = document.getElementById("loginStatusContainer");
+  if (!authStatus.success) {
+    loginStatusContainer.innerHTML = "<a class='btn btn-info shadow' role='button' href='/login.html'>Anmelden</a>";
+    return;
+  }
+  loginStatusContainer.innerHTML = `
         <div class="dropdown">
             <button class="btn btn-info shadow dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Verwalten
@@ -18,7 +18,7 @@ async function initApp() {
                 <li><a class="dropdown-item" id="logoutButton" href="#">Abmelden</a></li>
             </ul>
         </div>`;
-    document.getElementById('logoutButton')?.addEventListener('click', logout);
+  document.getElementById("logoutButton")?.addEventListener("click", logout);
 }
 
 initApp();
@@ -32,26 +32,26 @@ let projectsData = [];
 getProjects();
 
 async function getProjects() {
-    try {
-        const response = await fetch(`/api/projects/all`);
-        const data = await response.json();
-        const responseFromApi = data
-        projectsData = responseFromApi.projects;
-        renderProjects(projectsData);
-    } catch (error) {
-        console.log(error);
-        showFeedback({ success: false, message: error.message })
-    }
+  try {
+    const response = await fetch("/api/projects/all");
+    const data = await response.json();
+    const responseFromApi = data;
+    projectsData = responseFromApi.projects;
+    renderProjects(projectsData);
+  } catch (error) {
+    console.error("Fehler beim Laden der Projekte:", error);
+    showFeedback({ success: false, message: "Fehler beim Laden der Projekte" });
+  }
 }
 
 
 function renderProjects(projects) {
-    projectContainer.innerHTML = "";
-    projects.forEach((project) => {
-        const col = document.createElement("div");
-        const parsedImages = JSON.parse(project.images);
-        col.className = "col-lg-6 mb-5";
-        col.innerHTML = `
+  projectContainer.innerHTML = "";
+  projects.forEach((project) => {
+    const col = document.createElement("div");
+    const parsedImages = JSON.parse(project.images);
+    col.className = "col-lg-6 mb-5";
+    col.innerHTML = `
             <div class="card bg-dark shadow-sm text-white project-card h-100 w-100 rounded-3 project-mini-card" data-projectid="${project.project_id}">
                 <!-- Bild oben, nimmt volle Breite ein und bleibt komplett sichtbar -->
                 <div class="w-100 mini-card-imagediv">
@@ -69,43 +69,44 @@ function renderProjects(projects) {
                 </div>
             </div>
         `;
-        projectContainer.appendChild(col);
-    });
+    projectContainer.appendChild(col);
+  });
 }
 
 projectContainer.addEventListener("click", function (event) {
-    let target = event.target;
-    let card = target.closest(".project-mini-card")
-    let dataProjectId = card.dataset.projectid;
+  let target = event.target;
+  let card = target.closest(".project-mini-card");
+  let dataProjectId = card.dataset.projectid;
 
-    if (dataProjectId) {
-        event.stopPropagation();
-        event.preventDefault();
-        const projectId = dataProjectId;
-        const project = projectsData.find(p => p.project_id === parseInt(projectId));
-        projectMaximize(project);
-    }
+  if (dataProjectId) {
+    event.stopPropagation();
+    event.preventDefault();
+    const projectId = dataProjectId;
+    const project = projectsData.find(p => p.project_id === parseInt(projectId));
+    projectMaximize(project);
+  }
 });
 
 async function getReadmeContent(readmeLink) {
-    try {
-        const response = await fetch(readmeLink);
-        if (!response.ok) {
-            throw new Error("Fehler beim Laden der README.md");
-        }
-        const readmeContent = await response.text();
-        return marked.parse(readmeContent);
-    } catch (error) {
-        showFeedback({ success: false, message: "Bitte README Link überprüfen" });
+  try {
+    const response = await fetch(readmeLink);
+    if (!response.ok) {
+      throw new Error("Fehler beim Laden der README.md");
     }
+    const readmeContent = await response.text();
+    return marked.parse(readmeContent);
+  } catch (error) {
+    console.error("Fehler beim Laden der README.md:", error);
+    showFeedback({ success: false, message: "Fehler beim Laden der README.md" });
+  }
 }
 
 async function projectMaximize(project) {
-    projectContainer.innerHTML = "";
-    const parsedImages = JSON.parse(project.images);
-    const technologies = JSON.parse(project.techstack);
-    const readmeContent = await getReadmeContent(project.readmeLink);
-    maximizedProjectContainer.innerHTML = `
+  projectContainer.innerHTML = "";
+  const parsedImages = JSON.parse(project.images);
+  const technologies = JSON.parse(project.techstack);
+  const readmeContent = await getReadmeContent(project.readmeLink);
+  maximizedProjectContainer.innerHTML = `
                 <div class="card bg-dark shadow-sm text-white project-card h-100 w-75 rounded-3 mx-auto">
                         <div class="card-header d-flex align-items-center">
                         <button type="button" class="btn btn-link text-white p-0 me-2" style="font-size:1.5rem;" id="backButton">
@@ -113,29 +114,29 @@ async function projectMaximize(project) {
                         </button>
                         <span class="fw-bold">${project.title}</span>
                     </div>
-                    ${parsedImages.length === 1
-            ?
-            `<div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
-                        <img src="${parsedImages[0]}" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
-                        </div>`
-            :
-            `<div id="projectCarousel-${project.project_id}" class="carousel slide">
+    ${parsedImages.length === 1
+    ?
+    `<div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
+       <img src="${parsedImages[0]}" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
+    </div>`
+    :
+    `<div id="projectCarousel-${project.project_id}" class="carousel slide">
                             <div class="carousel-indicators">
                                 ${parsedImages.map((_, index) => `
                                     <button type="button" data-bs-target="#projectCarousel-${project.project_id}" 
                                         data-bs-slide-to="${index}" 
-                                        class="${index === 0 ? 'active' : ''}"
-                                        aria-current="${index === 0 ? 'true' : 'false'}"
+                                        class="${index === 0 ? "active" : ""}"
+                                        aria-current="${index === 0 ? "true" : "false"}"
                                         aria-label="Slide ${index + 1}">
                                     </button>
-                                `).join('')}
+                                `).join("")}
                             </div>
                             <div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
                                 ${parsedImages.map((img, index) => `
-                                    <div class="carousel-item ${index === 0 ? 'active' : ''}" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                                    <div class="carousel-item ${index === 0 ? "active" : ""}" style="position:absolute;top:0;left:0;width:100%;height:100%;">
                                         <img src="${img}" class="d-block projectPic" style="width:100%;height:100%;object-fit:contain;display:block;margin:auto;position:absolute;top:0;left:0;" alt="Projekt Bild ${index + 1}">
                                     </div>
-                                `).join('')}
+                                `).join("")}
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel-${project.project_id}"
                                 data-bs-slide="prev">
@@ -167,29 +168,29 @@ async function projectMaximize(project) {
                     <div class="card-footer">
                         <div class="d-flex justify-content-end social-icons gap-2">
                             ${project.githubLink.length > 0 ? `<a href="${project.githubLink}" aria-label="GitHub" id="previewGithubLink-${project.project_id}"><i
-                                    class="fab fa-github text-white"></i></a>` : ``}
+                                    class="fab fa-github text-white"></i></a>` : ""}
                         </div>
                     </div>
                 </div>
                 `;
-    document.getElementById("backButton").addEventListener("click", function (event) {
-        maximizedProjectContainer.innerHTML = "";
-        getProjects();
-    })
+  document.getElementById("backButton").addEventListener("click", function () {
+    maximizedProjectContainer.innerHTML = "";
+    getProjects();
+  });
 }
 
 
 document.addEventListener("click", function (event) {
-    const fullscreenBtn = event.target.closest('.fullscreenImageBtn');
-    if (fullscreenBtn) {
-        const projectId = fullscreenBtn.id.split('-')[1];
-        const project = projectsData.find(p => p.project_id === parseInt(projectId));
-        openCarouselModal(project);
-    }
+  const fullscreenBtn = event.target.closest(".fullscreenImageBtn");
+  if (fullscreenBtn) {
+    const projectId = fullscreenBtn.id.split("-")[1];
+    const project = projectsData.find(p => p.project_id === parseInt(projectId));
+    openCarouselModal(project);
+  }
 });
 
 function openCarouselModal(project) {
-    const modalHtml = `
+  const modalHtml = `
         <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content border-0 h-100 d-flex align-items-center justify-content-center" style="background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);">
@@ -198,8 +199,8 @@ function openCarouselModal(project) {
                             <div class="carousel-indicators">
                                 ${JSON.parse(project.images).map((_, index) => `
                                     <button type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide-to="${index}" 
-                                        class="${index === 0 ? 'active' : ''}" aria-label="Slide ${index + 1}"></button>
-                                `).join('')}
+                                        class="${index === 0 ? "active" : ""}" aria-label="Slide ${index + 1}"></button>
+                                `).join("")}
                             </div>
                             <div class="carousel-inner h-100">
                                 <button type="button" class="btn btn-carousel-modal position-absolute top-0 start-50 translate-middle-x mt-3" 
@@ -207,12 +208,12 @@ function openCarouselModal(project) {
                                     <i class="bi bi-x-lg"></i>
                                 </button>
                                 ${JSON.parse(project.images).map((img, index) => `
-                                    <div class="carousel-item h-100 ${index === 0 ? 'active' : ''}">
+                                    <div class="carousel-item h-100 ${index === 0 ? "active" : ""}">
                                         <div class="d-flex align-items-center justify-content-center h-100">
                                             <img src="${img}" style="max-width: 80vw; max-height: 80vh; width: auto; height: auto; object-fit: contain;" alt="Projekt Bild ${index + 1}">
                                         </div>
                                     </div>
-                                `).join('')}
+                                `).join("")}
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -229,14 +230,14 @@ function openCarouselModal(project) {
         </div>
     `;
 
-    // Entferne existierendes Modal falls vorhanden
-    const existingModal = document.getElementById('carouselModal');
-    if (existingModal) {
-        existingModal.remove();
-    }
+  // Entferne existierendes Modal falls vorhanden
+  const existingModal = document.getElementById("carouselModal");
+  if (existingModal) {
+    existingModal.remove();
+  }
 
-    // Füge neues Modal hinzu und zeige es an
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    const modal = new bootstrap.Modal(document.getElementById('carouselModal'));
-    modal.show();
+  // Füge neues Modal hinzu und zeige es an
+  document.body.insertAdjacentHTML("beforeend", modalHtml);
+  const modal = new bootstrap.Modal(document.getElementById("carouselModal"));
+  modal.show();
 }

@@ -56,6 +56,7 @@ function renderProjects(projects) {
                     <img 
                         src="${parsedImages[0]}" 
                         class="projectPic"
+                        loading="lazy"
                         alt="Projekt Bild"
                     >
                 </div>
@@ -118,7 +119,7 @@ async function projectMaximize(project) {
     ${parsedImages.length === 1
     ?
     `<div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
-       <img src="${parsedImages[0]}" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
+       <img src="${parsedImages[0]}" loading="lazy" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
     </div>`
     :
     `<div id="projectCarousel-${project.project_id}" class="carousel slide">
@@ -135,7 +136,7 @@ async function projectMaximize(project) {
                             <div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
                                 ${parsedImages.map((img, index) => `
                                     <div class="carousel-item ${index === 0 ? "active" : ""}" style="position:absolute;top:0;left:0;width:100%;height:100%;">
-                                        <img src="${img}" class="d-block projectPic" style="width:100%;height:100%;object-fit:contain;display:block;margin:auto;position:absolute;top:0;left:0;" alt="Projekt Bild ${index + 1}">
+                                        <img src="${img}" class="d-block projectPic" loading="lazy" style="width:100%;height:100%;object-fit:contain;display:block;margin:auto;position:absolute;top:0;left:0;" alt="Projekt Bild ${index + 1}">
                                     </div>
                                 `).join("")}
                             </div>
@@ -211,7 +212,7 @@ function openCarouselModal(project) {
                                 ${JSON.parse(project.images).map((img, index) => `
                                     <div class="carousel-item h-100 ${index === 0 ? "active" : ""}">
                                         <div class="d-flex align-items-center justify-content-center h-100">
-                                            <img src="${img}" style="max-width: 80vw; max-height: 80vh; width: auto; height: auto; object-fit: contain;" alt="Projekt Bild ${index + 1}">
+                                            <img src="${img}" loading="lazy" style="max-width: 80vw; max-height: 80vh; width: auto; height: auto; object-fit: contain;" alt="Projekt Bild ${index + 1}">
                                         </div>
                                     </div>
                                 `).join("")}

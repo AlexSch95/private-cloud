@@ -52,7 +52,6 @@ function renderProjects(projects) {
     col.className = "col-lg-6 mb-5";
     col.innerHTML = `
             <div class="card bg-dark shadow-sm text-white project-card h-100 w-100 rounded-3 project-mini-card" data-projectid="${project.project_id}">
-                <!-- Bild oben, nimmt volle Breite ein und bleibt komplett sichtbar -->
                 <div class="w-100 mini-card-imagediv">
                     <img 
                         src="${parsedImages[0]}" 

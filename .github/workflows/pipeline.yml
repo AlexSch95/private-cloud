@@ -27,4 +27,6 @@ jobs:
                 port: 22
                 script: |
                   cd private-cloud/
-                  cloud-update
+                  git pull
+                  docker compose down
+                  docker compose up -d --build

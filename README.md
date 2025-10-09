@@ -1,16 +1,8 @@
-# Private Cloud Projekt
-
 ## 📋 Übersicht
-Eine selbst gehostete Cloud-Lösung für die sichere Speicherung und Verwaltung von Bildern. Das Projekt bietet eine intuitive Weboberfläche mit Authentifizierung und modernem Design.
+Eine selbst gehostete Webanwendung zur Visualisierung meines Techstacks und meiner privaten Projekte. Das Projekt bietet eine intuitive Weboberfläche mit Authentifizierung und modernem Design.
 
 ## ✨ Hauptfunktionen
 - 🔐 Sicheres Login-System mit JWT-Authentifizierung
-- 🖼️ Responsive Bildergalerie
-- 🔍 Echtzeit-Suchfunktion innerhalb der Bildergalerie
-- 🌓 Dark Mode
-- 🔄 Direkte Bildvorschau
-- 📋 One-Click Link Sharing
-- 🗑️ Sicheres Löschen mit Bestätigung
 - 👀 Projektübersicht
 - ⚙️ Verwaltung der hinterlegten Projekte
 
@@ -27,7 +19,6 @@ Eine selbst gehostete Cloud-Lösung für die sichere Speicherung und Verwaltung 
 - Node.js & Express.js
 - MySQL 8.0
 - JWT (Authentication)
-- Multer (File Upload)
 - bcrypt (Password Hashing)
 
 ### Deployment
@@ -72,9 +63,9 @@ cd private-cloud
 2. Umgebungsvariablen konfigurieren (Beispiel für Local Developement):
 ```bash
 echo "DB_HOST=mysql
-DB_USER=private_cloud_user
+DB_USER=portfolio_user
 DB_PASSWORD=developement_db_pw
-DB_NAME=private_cloud
+DB_NAME=portfolio_db
 DB_ROOT_PASSWORD=developement_db_root_pw
 JWT_SECRET=developement_jwt_secret
 NGINX_CONF=nginx.dev.conf
@@ -105,13 +96,11 @@ docker-compose up -d
 ### Backend-Entwicklung
 - RESTful API-Design
 - Sichere Authentifizierung
-- Optimierte Bildverarbeitung
 - Strukturierte Datenbankanbindung
 
 ## 🌐 Deployment
 
-Das Projekt ist für Docker-basiertes Deployment optimiert:  
+Das Projekt ist für DockerCompose-basiertes Deployment optimiert 
 
-![Visualisierung von Docker-Compose](https://raw.githubusercontent.com/AlexSch95/private-cloud/refs/heads/main/Docker-Compose-Visual.jpg)
 
 Kontakt: 95.schulz@googlemail.com

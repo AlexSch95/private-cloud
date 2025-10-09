@@ -1,16 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
-const multer = require("multer");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { connectToDatabase } = require("./db.js");
 const app = express();
 
-require('dotenv').config();
+require("dotenv").config();
 
 app.use(morgan("dev"));
 app.use(express.json());
@@ -19,51 +16,14 @@ app.use(cookieParser());
 app.use(cors());
 
 // desc: Directories werden festgelegt und konstanten aus .env geladen
-const IMAGE_DIRECTORY = '/app/uploads/images';
-const PROJECTIMAGE_DIRECTORY = '/app/uploads/projectimages';
+const PROJECTIMAGE_DIRECTORY = "/app/uploads/projectimages";
 const secretKey = process.env.JWT_SECRET;
-const FRONTEND_URL = process.env.FRONTEND_URL;
-
-// desc: Multer Storage konfiguration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, IMAGE_DIRECTORY);
-  },
-  filename: function (req, file, cb) {
-    // ShareX-kompatibler Dateiname
-    const originalName = file.originalname;
-    const safeName = originalName.replace(/[^a-zA-Z0-9_.-]/g, '_');
-    cb(null, `${safeName}`);
-  }
-});
-
-// desc: Dateifilter für multer, nur Bilder erlaubt
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|webp|bmp|tiff|svg/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = file.mimetype.startsWith('image/');
-
-  if (mimetype && extname) {
-    cb(null, true);
-  } else {
-    cb(new Error('Nur Bilddateien sind erlaubt!'), false);
-  }
-};
-
-// desc: Multer-Upload-Setup Images
-const imagesUpload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 20 * 1024 * 1024 // 20MB Limit
-  }
-});
 
 // desc: Middleware zur Token-Authentifizierung
 function authenticateToken(req, res, next) {
   const tokenFromCookie = req.cookies.token;
-  if (!tokenFromCookie){
-    return res.status(401).json({success: false, message: "Bitte anmelden."});
+  if (!tokenFromCookie) {
+    return res.status(401).json({ success: false, message: "Bitte anmelden." });
   }
   try {
     const decoded = jwt.verify(tokenFromCookie, secretKey);
@@ -73,51 +33,18 @@ function authenticateToken(req, res, next) {
   } catch (error) {
     console.error(`Fehler in Middleware "authenticateToken": ${error}`);
     if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
-      res.clearCookie('token');
+      res.clearCookie("token");
     }
     if (error.message.includes("jwt malformed")) {
       return res.status(400).json({
         success: false,
         message: "Ungültiger oder abgelaufener Token wurde übermittelt."
-      })
+      });
     }
     res.status(500).json({
-      success: false, 
+      success: false,
       message: "Es besteht ein Problem mit dem Session-Cookie. Bitte melden Sie sich erneut an oder kontaktieren Sie einen Administrator"
-    })
-  }
-}
-
-// desc: Dateinamen parsen und Metadaten extrahieren für Datenbank
-function parseFilename(filename) {
-  // Dateinamen ohne Extension
-  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
-  const parts = nameWithoutExt.split(/[_:]+/);
-  const extractedTime = parts[2];
-  const extractedDate = parts[1];
-
-  return {
-    original: filename,
-    name: parts[0] || '', // "Code"
-    date: extractedDate || '', // "29-08-25"
-    time: extractedTime || '', // "12-02"
-  };
-}
-
-// desc: Metadaten in die Datenbank schreiben
-async function dbPictureMeta(filename) {
-  const meta = parseFilename(filename);
-  const generatedFilepath = `${FRONTEND_URL}/images/${filename}`;
-  try {
-    const connection = await connectToDatabase();
-    const [result] = await connection.execute(
-      "INSERT INTO pictures (title, file_path, creation_date, creation_time) VALUES (?, ?, ?, ?);",
-      [meta.name, generatedFilepath, meta.date, meta.time]
-    );
-    await connection.end();
-    console.log('Datenbankeintrag erfolgreich als ID:', result.insertId);
-  } catch (error) {
-    console.error('Datenbankfehler:', error);
+    });
   }
 }
 
@@ -127,14 +54,15 @@ app.get("/api/check-auth", authenticateToken, (req, res) => {
     res.status(200).json({
       success: true,
       message: "Token Verifizierung erfolgreich"
-    })
+    });
   } catch (error) {
+    console.error(`Fehler in Route "/api/check-auth": ${error}`);
     res.status(400).json({
       success: false,
       message: "Token Verifizierung fehlgeschlagen"
-    })
+    });
   }
-})
+});
 
 // desc: Route um alle Projekte zu laden
 app.get("/api/projects/all", async (req, res) => {
@@ -148,7 +76,7 @@ app.get("/api/projects/all", async (req, res) => {
       projects: result
     });
   } catch (error) {
-    console.error('Fehler beim Laden der Projekte (/api/projects/all):', error);
+    console.error("Fehler beim Laden der Projekte (/api/projects/all):", error);
     res.status(500).json({
       success: false,
       message: "Fehler beim Laden der Projekte..."
@@ -172,7 +100,7 @@ app.post("/api/projects/add", authenticateToken, async (req, res) => {
       projectId: result.insertId
     });
   } catch (error) {
-    console.error('Fehler beim Hinzufügen des Projekts:', error);
+    console.error("Fehler beim Hinzufügen des Projekts (/api/projects/add):", error);
     res.status(500).json({
       success: false,
       message: "Fehler beim Hinzufügen des Projekts"
@@ -180,71 +108,12 @@ app.post("/api/projects/add", authenticateToken, async (req, res) => {
   }
 });
 
-// desc: Bild-Upload Route für ShareX Custom Uploader optimiert
-app.post('/api/pictures/upload', imagesUpload.single('image'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send('No file uploaded');
-    }
-    const imageUrl = `${FRONTEND_URL}/images/${req.file.filename}`;
-    res.send(imageUrl);
-    await dbPictureMeta(req.file.filename);
-    console.log(`Upload Erfolgreich: ${imageUrl}`);
-
-  } catch (error) {
-    console.error('Upload Fehler:', error);
-    res.status(500).send('Upload fehlgeschlagen: ' + error.message);
-  }
-});
-
-// desc: Route um Bild zu löschen, löscht aktuell nur Meta-Daten, datei bleibt vorhanden
-// todo: Bild endgültig löschen oder 30 tage zwischenspeichern und automatisiert nach 30 tagen löschen
-app.delete('/api/pictures/delete/:id', authenticateToken, async (req, res) => {
-  const pictureId = req.params.id;
-  try {
-    const connection = await connectToDatabase();
-    const [result] = await connection.execute("DELETE FROM pictures WHERE id = ?;", [pictureId]);
-    await connection.end();
-    res.status(200).json({
-      success: true,
-      message: "Bild erfolgreich gelöscht"
-    });
-  } catch (error) {
-    console.error('Datenbankfehler:', error);
-    res.status(500).json({
-      success: false,
-      message: "Fehler beim Löschen des Bildes"
-    });
-  }
-});
-
 // desc: ermöglicht direct URL zu den Bildern
-app.use('/images', express.static(IMAGE_DIRECTORY));
-app.use('/projectimages', express.static(PROJECTIMAGE_DIRECTORY));
-
-// desc: Route um alle Bilder zu laden
-app.get("/api/pictures/all", authenticateToken, async (req, res) => {
-  try {
-    const connection = await connectToDatabase();
-    const [result] = await connection.execute("SELECT * FROM pictures ORDER BY creation_date DESC, creation_time DESC;");
-    await connection.end();
-    res.status(200).json({
-      success: true,
-      message: "Bilder erfolgreich geladen",
-      pictures: result
-    });
-  } catch (error) {
-    console.error('Fehler beim Laden der Bilder:', error);
-    res.status(500).json({
-      success: false,
-      message: "Fehler beim Laden der Bilder..."
-    });
-  }
-})
+app.use("/projectimages", express.static(PROJECTIMAGE_DIRECTORY));
 
 // desc: logout route, löscht cookie
 app.get("/api/logout", (req, res) => {
-  res.clearCookie('token').json({
+  res.clearCookie("token").json({
     success: true,
     message: "Abmeldung erfolgreich."
   });
@@ -263,7 +132,7 @@ app.post("/api/login", async (req, res) => {
     const connection = await connectToDatabase();
     // Überprüfe, ob Username existiert
     const [existingUsers] = await connection.execute(
-      'SELECT * FROM users WHERE user_name = ?', [username]
+      "SELECT * FROM users WHERE user_name = ?", [username]
     );
     await connection.end();
     if (existingUsers.length === 0) {
@@ -286,62 +155,62 @@ app.post("/api/login", async (req, res) => {
     const tokenUser = {
       id: user.user_id,
       username: user.user_name,
-    }
+    };
     //erstellen des verschlüsselten Tokens mit jwt.sign
-    const token = jwt.sign(tokenUser, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign(tokenUser, secretKey, { expiresIn: "1h" });
     //antwort ans frontend inklusive des erstellten, verschlüsselten tokens
     res.status(200)
-      .cookie('token', token, { httpOnly: true, maxAge: 3600000 }) // 1 Stunde Gültigkeit
+      .cookie("token", token, { httpOnly: true, maxAge: 3600000 }) // 1 Stunde Gültigkeit
       .json({
         success: true,
         message: `Anmeldung als ${username} erfolgreich.`,
-      })
+      });
 
   } catch (error) {
     console.error(`Fehler in Route "/api/login": ${error}`);
     res.status(500).json({
       success: false,
       message: "Interner Serverfehler, Systemadministrator kontaktieren."
-    })
+    });
   }
 });
 
-// app.post("/api/register", async (req, res) => {
-//   try {
-//     // Username und Passwort auslesen
-//     const { username, password } = req.body;
-//     if (username === undefined || password === undefined) {
-//       return res.status(400).json({ error: "Username oder Passwort nicht übergeben." });
-//     }
-//     const connection = await connectToDatabase();
-//     // Überprüfe, ob Username schon vergeben
-//     const [existingUsers] = await connection.execute(
-//       'SELECT * FROM users WHERE user_name = ?', [username]
-//     );
-//     if (existingUsers.length > 0) {
-//       return res.status(500).json({
-//         success: false,
-//         message: "Username existiert schon."
-//       });
-//     }
-//     // Ab hier: User erstellen
-//     const saltRounds = 10;
-//     const hashedPassword = await bcrypt.hash(password, saltRounds);
-//     const [newUser] = await connection.execute(
-//       'INSERT INTO users (user_name, password_hash) VALUES (?, ?)', [username, hashedPassword]
-//     );
-//     await connection.end();
-//     res.status(201).json({
-//       success: true,
-//       message: `User ${username} erfolgreich erstellt.`,
-//     })
-//   } catch (error) {
-//     return res.status(500).json({ error: "Fehler beim Erstellen des Users." });
-//   }
-// });
+app.post("/api/register", async (req, res) => {
+  try {
+    // Username und Passwort auslesen
+    const { username, password } = req.body;
+    if (username === undefined || password === undefined) {
+      return res.status(400).json({ error: "Username oder Passwort nicht übergeben." });
+    }
+    const connection = await connectToDatabase();
+    // Überprüfe, ob Username schon vergeben
+    const [existingUsers] = await connection.execute(
+      "SELECT * FROM users WHERE user_name = ?", [username]
+    );
+    if (existingUsers.length > 0) {
+      return res.status(500).json({
+        success: false,
+        message: "Username existiert schon."
+      });
+    }
+    // Ab hier: User erstellen
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    await connection.execute("INSERT INTO users (user_name, password_hash) VALUES (?, ?)", [username, hashedPassword]
+    );
+    await connection.end();
+    res.status(201).json({
+      success: true,
+      message: `User ${username} erfolgreich erstellt.`,
+    });
+  } catch (error) {
+    console.error(`Fehler in Route "/api/register": ${error}`);
+    return res.status(500).json({ error: "Fehler beim Erstellen des Users." });
+  }
+});
 
 
 
 app.listen(3000, () => {
-  console.log(`Server läuft unter http://localhost:3000`);
-})
+  console.info("Backend läuft auf Port 3000");
+});

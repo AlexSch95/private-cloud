@@ -14,7 +14,6 @@ async function initApp() {
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="/add-project.html">Projekt hinzufügen</a></li>
-                <li><a class="dropdown-item" href="/pictures.html">Screenshots verwalten</a></li>
                 <li><a class="dropdown-item" id="logoutButton" href="#">Abmelden</a></li>
             </ul>
         </div>`;
@@ -105,7 +104,10 @@ async function projectMaximize(project) {
   projectContainer.innerHTML = "";
   const parsedImages = JSON.parse(project.images);
   const technologies = JSON.parse(project.techstack);
-  const readmeContent = await getReadmeContent(project.readmeLink);
+  let descriptionContent = project.description;
+  if (project.readmeLink.length > 0) {
+    descriptionContent = await getReadmeContent(project.readmeLink);
+  }
   maximizedProjectContainer.innerHTML = `
                 <div class="card bg-dark shadow-sm text-white project-card h-100 w-75 rounded-3 mx-auto">
                         <div class="card-header d-flex align-items-center">
@@ -160,7 +162,7 @@ async function projectMaximize(project) {
                             <h4 class="col mb-4" id="previewTitle-${project.project_id}">${project.title}</h4><small
                                 class="mb-2 text-end col" id="previewStatus-${project.project_id}">${project.status}</small>
                         </div>
-                        <p class="card-text" id="previewDescription-${project.project_id}">${readmeContent}</p>
+                        <p class="card-text" id="previewDescription-${project.project_id}">${descriptionContent}</p>
                         <hr>
                         <p class="card-text">Technologien:</p>
                         <span class="text-white" class="techstack">${technologies.map(tech => `<span class="badge btn btn-outline-info me-2 mb-2 rounded-5 shadow p-2">${tech}</span>`).join("")}</span>

@@ -14,7 +14,6 @@ async function initApp() {
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="/add-project.html">Projekt hinzufügen</a></li>
-                <li><a class="dropdown-item" href="/pictures.html">Screenshots verwalten</a></li>
                 <li><a class="dropdown-item" id="logoutButton" href="#">Abmelden</a></li>
             </ul>
         </div>`;

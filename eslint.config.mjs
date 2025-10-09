@@ -27,7 +27,7 @@ export default [
       "quotes": ["error", "double"],
       "semi": ["error", "always"],
       "no-unused-vars": "error",
-      "no-console": ["warn", { "allow": ["error", "warn"] }]
+      "no-console": ["warn", { "allow": ["error", "warn", "info"] }]
     }
   },
   {

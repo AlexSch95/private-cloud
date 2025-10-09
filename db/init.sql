@@ -1,12 +1,5 @@
-USE private_cloud;
-
-CREATE TABLE IF NOT EXISTS pictures (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    file_path VARCHAR(255) NOT NULL,
-    creation_date VARCHAR(255),
-    creation_time VARCHAR(255)
-);
+CREATE DATABASE IF NOT EXISTS machinezr_portfolio;
+USE machinezr_portfolio;
 
 CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -21,5 +14,6 @@ CREATE TABLE IF NOT EXISTS projects (
     images TEXT,
     githubLink VARCHAR(255),
     readmeLink VARCHAR(255),
-    status VARCHAR(50)
+    status VARCHAR(50),
+    techstack TEXT
 );

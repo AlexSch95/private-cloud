@@ -43,6 +43,7 @@ function registerEventListeners() {
       event.preventDefault();
       const projectId = dataProjectId;
       const project = projectsData.find(p => p.project_id === parseInt(projectId));
+      projectContainer.innerHTML = "";
       projectMaximize(project);
     }
   });
@@ -115,21 +116,20 @@ async function getReadmeContent(readmeLink) {
   }
 }
 
-async function projectMaximize(project) {
-  projectContainer.innerHTML = "";
+async function projectMaximize(project, container = maximizedProjectContainer) {
   const parsedImages = JSON.parse(project.images);
   const technologies = JSON.parse(project.techstack);
   let descriptionContent = project.description;
   if (project.readmeLink.length > 0) {
     descriptionContent = await getReadmeContent(project.readmeLink);
   }
-  maximizedProjectContainer.innerHTML = `
+  container.innerHTML = `
                 <div class="card bg-dark shadow-sm text-white project-card h-100 w-75 rounded-3 mx-auto">
                         <div class="card-header d-flex align-items-center">
                         <button type="button" class="btn btn-link text-white p-0 me-2" style="font-size:1.5rem;" id="backButton">
                             <i class="bi bi-arrow-left"></i>
                         </button>
-                        <span class="fw-bold">${project.title}</span>
+                        <span class="fw-bold" id="maximizedProjectTitle">${project.title}</span>
                     </div>
     ${parsedImages.length === 1
     ?
@@ -137,10 +137,10 @@ async function projectMaximize(project) {
     <img src="${parsedImages[0]}" loading="lazy" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
     </div>`
     :
-    `<div id="projectCarousel-${project.project_id}" class="carousel slide">
+    `<div id="projectCarousel" class="carousel slide">
                             <div class="carousel-indicators">
                                 ${parsedImages.map((_, index) => `
-                                    <button type="button" data-bs-target="#projectCarousel-${project.project_id}" 
+                                    <button type="button" data-bs-target="#projectCarousel" 
                                         data-bs-slide-to="${index}" 
                                         class="${index === 0 ? "active" : ""}"
                                         aria-current="${index === 0 ? "true" : "false"}"
@@ -155,17 +155,17 @@ async function projectMaximize(project) {
                                     </div>
                                 `).join("")}
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel-${project.project_id}"
+                            <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel"
                                 data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Zurück</span>
                             </button>
                             <button class="carousel-control-center position-absolute top-50 start-50 translate-middle border-0 bg-transparent text-white fs-3 fullscreenImageBtn"
-                                type="button" id="fullscreenBtn-${project.project_id}">
+                                type="button" id="fullscreenBtn">
                                 <i class="bi bi-fullscreen shadow"></i>
                                 <span class="visually-hidden">Vollbild</span>
                             </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel-${project.project_id}"
+                            <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel"
                                 data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Weiter</span>
@@ -173,25 +173,24 @@ async function projectMaximize(project) {
                         </div>`}
                     <div class="card-body d-flex flex-column">
                         <div class="row">
-
-                            <h4 class="col mb-4" id="previewTitle-${project.project_id}">${project.title}</h4><small
-                                class="mb-2 text-end col" id="previewStatus-${project.project_id}">${project.status}</small>
+                        <small class="mb-2 text-end col" id="maximizedProjectStatus">${project.status}</small>
                         </div>
-                        <p class="card-text" id="previewDescription-${project.project_id}">${descriptionContent}</p>
+                        <p class="card-text" id="maximizedProjectDescription">${descriptionContent}</p>
                         <hr>
                         <p class="card-text">Technologien:</p>
                         <span class="text-white" class="techstack">${technologies.map(tech => `<span class="badge btn btn-outline-info me-2 mb-2 rounded-5 shadow p-2">${tech}</span>`).join("")}</span>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-end social-icons gap-2">
-                            ${project.githubLink.length > 0 ? `<a href="${project.githubLink}" aria-label="GitHub" id="previewGithubLink-${project.project_id}"><i
-                                    class="fab fa-github text-white"></i></a>` : ""}
+                            <a href="${project.githubLink}" aria-label="GitHub" id="previewGithubLink">
+                              <i class="fab fa-github text-white"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
                 `;
   document.getElementById("backButton").addEventListener("click", function () {
-    maximizedProjectContainer.innerHTML = "";
+    container.innerHTML = "";
     getProjects();
   });
 }
@@ -252,4 +251,4 @@ function openCarouselModal(project) {
   modal.show();
 }
 
-export { renderProjects, projectContainer };
+export { renderProjects, projectContainer, maximizedProjectContainer, projectMaximize };

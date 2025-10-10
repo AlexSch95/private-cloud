@@ -5,7 +5,8 @@ export default [
   {
     ignores: [
       "node_modules/",
-      "*.min.js"
+      "*.min.js",
+      "*.test.js",
     ]
   },
   js.configs.recommended,
@@ -13,7 +14,7 @@ export default [
     files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
-      sourceType: "module", // <- Wichtig für ES6 Module (import/export)
+      sourceType: "module",
       globals: {
         ...globals.browser,
         ...globals.node,
@@ -31,7 +32,6 @@ export default [
     }
   },
   {
-    // Für Node.js Dateien (falls vorhanden)
     files: ["*.config.js", "jest.setup.js"],
     languageOptions: {
       sourceType: "commonjs",

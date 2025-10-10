@@ -1,5 +1,17 @@
 import { showFeedback, checkAuth, logout } from "./sharedFunctions.js";
 
+// desc: Container def
+const projectContainer = document.getElementById("projectContainer");
+const maximizedProjectContainer = document.getElementById("maximizedProjectContainer");
+let projectsData = [];
+
+
+if (typeof process === "undefined" || process.env.JEST_WORKER_ID === undefined) {
+  initApp();
+  getProjects();
+  registerEventListeners();
+}
+
 async function initApp() {
   const authStatus = await checkAuth();
   const loginStatusContainer = document.getElementById("loginStatusContainer");
@@ -20,15 +32,30 @@ async function initApp() {
   document.getElementById("logoutButton")?.addEventListener("click", logout);
 }
 
-initApp();
+function registerEventListeners() {
+  projectContainer.addEventListener("click", function (event) {
+    let target = event.target;
+    let card = target.closest(".project-mini-card");
+    let dataProjectId = card.dataset.projectid;
 
+    if (dataProjectId) {
+      event.stopPropagation();
+      event.preventDefault();
+      const projectId = dataProjectId;
+      const project = projectsData.find(p => p.project_id === parseInt(projectId));
+      projectMaximize(project);
+    }
+  });
 
-// desc: Container def
-const projectContainer = document.getElementById("projectContainer");
-const maximizedProjectContainer = document.getElementById("maximizedProjectContainer");
-let projectsData = [];
-
-getProjects();
+  document.addEventListener("click", function (event) {
+    const fullscreenBtn = event.target.closest(".fullscreenImageBtn");
+    if (fullscreenBtn) {
+      const projectId = fullscreenBtn.id.split("-")[1];
+      const project = projectsData.find(p => p.project_id === parseInt(projectId));
+      openCarouselModal(project);
+    }
+  });
+}
 
 async function getProjects() {
   try {
@@ -44,8 +71,8 @@ async function getProjects() {
 }
 
 
-function renderProjects(projects) {
-  projectContainer.innerHTML = "";
+function renderProjects(projects, container = projectContainer) {
+  container.innerHTML = "";
   projects.forEach((project) => {
     const col = document.createElement("div");
     const parsedImages = JSON.parse(project.images);
@@ -68,23 +95,11 @@ function renderProjects(projects) {
                 </div>
             </div>
         `;
-    projectContainer.appendChild(col);
+    container.appendChild(col);
   });
 }
 
-projectContainer.addEventListener("click", function (event) {
-  let target = event.target;
-  let card = target.closest(".project-mini-card");
-  let dataProjectId = card.dataset.projectid;
 
-  if (dataProjectId) {
-    event.stopPropagation();
-    event.preventDefault();
-    const projectId = dataProjectId;
-    const project = projectsData.find(p => p.project_id === parseInt(projectId));
-    projectMaximize(project);
-  }
-});
 
 async function getReadmeContent(readmeLink) {
   try {
@@ -119,7 +134,7 @@ async function projectMaximize(project) {
     ${parsedImages.length === 1
     ?
     `<div class="carousel-inner" style="width:100%;height:0;padding-bottom:56.25%;position:relative;">
-       <img src="${parsedImages[0]}" loading="lazy" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
+    <img src="${parsedImages[0]}" loading="lazy" class="d-block projectPic" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;margin:auto;" alt="Projekt Bild 1">
     </div>`
     :
     `<div id="projectCarousel-${project.project_id}" class="carousel slide">
@@ -182,14 +197,7 @@ async function projectMaximize(project) {
 }
 
 
-document.addEventListener("click", function (event) {
-  const fullscreenBtn = event.target.closest(".fullscreenImageBtn");
-  if (fullscreenBtn) {
-    const projectId = fullscreenBtn.id.split("-")[1];
-    const project = projectsData.find(p => p.project_id === parseInt(projectId));
-    openCarouselModal(project);
-  }
-});
+
 
 function openCarouselModal(project) {
   const modalHtml = `
@@ -243,3 +251,5 @@ function openCarouselModal(project) {
   const modal = new bootstrap.Modal(document.getElementById("carouselModal"));
   modal.show();
 }
+
+export { renderProjects, projectContainer };

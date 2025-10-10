@@ -17,9 +17,24 @@ jobs:
                 npm ci
                 npm run lint
 
-    deploy:
+    testing:
         runs-on: ubuntu-latest
         needs: linting
+        steps:
+            - name: Codebase laden
+              uses: actions/checkout@v3
+            - name: Node.js einrichten
+              uses: actions/setup-node@v5
+              with:
+                node-version: '22'
+            - name: Abhängigkeiten installieren und Tests ausführen
+              run: |
+                npm ci
+                npm test
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: testing
         if: github.ref == 'refs/heads/main'
         steps:
             - name: Git Pull vom Hostsystem aus ausführen und Docker Compose neu starten

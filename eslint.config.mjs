@@ -6,7 +6,8 @@ export default [
     ignores: [
       "node_modules/",
       "*.min.js",
-      "*.test.js",
+      "**/*.test.js",
+      "**/__tests__/**",
     ]
   },
   js.configs.recommended,

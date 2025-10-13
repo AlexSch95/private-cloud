@@ -78,7 +78,9 @@ async function renderProjects(projects, container = projectContainer) {
     return;
   } else {
     container.innerHTML = `
-      <span class="loader d-flex justify-content-center align-items-center"></span>
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 300px; height: 40vh;">
+        <span class="loader"></span>
+      </div>
     `;
   }
   const imageUrls = projects.map(project => JSON.parse(project.images));

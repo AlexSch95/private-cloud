@@ -73,11 +73,17 @@ async function getProjects() {
 
 
 async function renderProjects(projects, container = projectContainer) {
-  container.innerHTML = `
-    <span class="loader"></span>
-  `;
+  if (projects.length === 0) {
+    container.innerHTML = "";
+    return;
+  } else {
+    container.innerHTML = `
+      <span class="loader"></span>
+    `;
+  }
   const imageUrls = projects.map(project => JSON.parse(project.images));
   await preloadImages(imageUrls);
+  container.innerHTML = "";
   projects.forEach((project) => {
     const col = document.createElement("div");
     const parsedImages = JSON.parse(project.images);

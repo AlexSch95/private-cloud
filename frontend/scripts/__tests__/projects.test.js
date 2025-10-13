@@ -7,6 +7,9 @@ global.fetch = jest.fn();
 global.marked = {
   parse: jest.fn((markdown) => markdown)
 };
+global.Image = class {
+  set src(_) { setTimeout(() => this.onload && this.onload(), 0); }
+};
 
 document.body.innerHTML = `
   <div id="projectContainer"></div>
@@ -22,7 +25,7 @@ describe("Renderfunktionen", () => {
     projectContainer.innerHTML = "";
   });
 
-  test("Rendert für jedes Projekt eine Karte (funktion: renderProjects)", () => {
+  test("Rendert für jedes Projekt eine Karte (funktion: renderProjects)", async () => {
     //desc: definiere projektdaten
     const testProjects = [
       {
@@ -40,7 +43,7 @@ describe("Renderfunktionen", () => {
     ];
 
     //desc: Aufruf der Funktion mit testdaten und dem mock-container
-    renderProjects(testProjects, projectContainer);
+    await renderProjects(testProjects, projectContainer);
 
     //desc: prüft ob 2 Projekt karten erstellt wurden
     const projectCards = projectContainer.querySelectorAll(".project-mini-card");

@@ -17,7 +17,7 @@ Eine selbst gehostete Webanwendung zur Visualisierung meines Techstacks und mein
 ### Backend
 - Node.js & Express.js
 - MySQL 8.0
-- JWT (Authentication)
+- JSON-Web-TOken (Authentifizierung)
 - bcrypt (Password Hashing)
 
 ### Deployment

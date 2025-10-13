@@ -418,6 +418,21 @@ body {
   }
 } 
 
+.badge-html      { background: #e44d26; color: #fff; }
+.badge-bootstrap { background: #7952b3; color: #fff; }
+.badge-js        { background: #f7df1e; color: #222; }
+.badge-node      { background: #3c873a; color: #fff; }
+.badge-express   { background: #535353; color: #fff; }
+.badge-python    { background: #3776ab; color: #fff; }
+.badge-mysql     { background: #00758f; color: #fff; }
+.badge-sqlite    { background: #003b57; color: #fff; }
+.badge-docker    { background: #2496ed; color: #fff; }
+.badge-git       { background: #f34f29; color: #fff; }
+.badge-rest      { background: #6db33f; color: #fff; }
+.badge-notion    { background: #fff; color: #222; border: 1px solid #222; }
+.badge-scrum     { background: #20c997; color: #fff; }
+.badge-electron  { background: #0080a7; color: #fff; }
+
 /* Animation für das Erscheinen */
 .custom-confirm-modal.show {
   animation: modalFadeIn 0.3s ease-out;

@@ -14,7 +14,7 @@ document.body.innerHTML = `
 `;
 
 
-describe("renderProjects", () => {
+describe("Renderfunktionen", () => {
   let projectContainer;
 
   beforeEach(() => {

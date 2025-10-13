@@ -72,8 +72,12 @@ async function getProjects() {
 }
 
 
-function renderProjects(projects, container = projectContainer) {
-  container.innerHTML = "";
+async function renderProjects(projects, container = projectContainer) {
+  container.innerHTML = `
+    <span class="loader"></span>
+  `;
+  const imageUrls = projects.map(project => JSON.parse(project.images));
+  await preloadImages(imageUrls);
   projects.forEach((project) => {
     const col = document.createElement("div");
     const parsedImages = JSON.parse(project.images);
@@ -100,7 +104,19 @@ function renderProjects(projects, container = projectContainer) {
   });
 }
 
-
+async function preloadImages(urls) {
+  await Promise.all(
+    urls.map(
+      url =>
+        new Promise(resolve => {
+          const img = new window.Image();
+          img.src = url;
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        })
+    )
+  );
+}
 
 async function getReadmeContent(readmeLink) {
   try {

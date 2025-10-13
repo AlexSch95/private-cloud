@@ -1,6 +1,18 @@
 name: pipeline
 
-on: [ push, pull_request ]
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/pipeline.yml'
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/pipeline.yml'
 
 jobs:
     linting:

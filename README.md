@@ -13,7 +13,6 @@ Eine selbst gehostete Webanwendung zur Visualisierung meines Techstacks und mein
 - JavaScript (ES6+, Module System)
 - Bootstrap 5 (Responsive Framework)
 - FontAwesome & Bootstrap Icons
-- Nginx (Reverse Proxy)
 
 ### Backend
 - Node.js & Express.js
@@ -22,35 +21,11 @@ Eine selbst gehostete Webanwendung zur Visualisierung meines Techstacks und mein
 - bcrypt (Password Hashing)
 
 ### Deployment
-- Docker & Docker Compose
-- SSL/TLS Encryption
-- Environment Variables
+- CI/CD Pipeline mit Linting, Tests und automatischem Deployment
+- Docker & Docker Compose für Nginx, Datenbank und Backend
+- SSL/TLS Encryption (HTTPS)
+- Umgebungsvariablen
 - Reverse Proxy Configuration
-
-## 🗂️ Projektstruktur
-```
-private-cloud/
-├── frontend/                 # Frontend-Anwendung
-│   ├── assets/              # Statische Ressourcen
-│   │   ├── img/            # Bilder
-│   │   └── styles/         # CSS-Dateien
-│   ├── scripts/            # JavaScript-Module
-│   ├── *.html             # HTML-Seiten
-│   ├── Dockerfile         # Frontend-Container
-│   ├── nginx.dev.conf     # Nginx-Konfiguration ohne SSL (für Dev)
-│   └── nginx.conf         # Nginx-Konfiguration
-│
-├── backend/                 # Backend-Server
-│   ├── uploads/            # Upload-Verzeichnis
-│   ├── server.js          # Express-Server
-│   ├── db.js             # Datenbankanbindung
-│   └── Dockerfile        # Backend-Container
-│
-├── db/                     # Datenbank
-│   └── init.sql          # DB-Initialisierung
-│
-└── docker-compose.yml      # Container-Orchestrierung
-```
 
 ## 🚀 Installation & Setup
 
@@ -81,9 +56,8 @@ docker-compose up -d
 
 - HTTPS-Verschlüsselung durch SSL/TLS
 - Sichere Passwortspeicherung mit bcrypt
-- JWT-basierte Sitzungsverwaltung
+- JWT-basierte Sitzungsverwaltung mit HTTP-Only Cookies
 - Geschützte API-Endpunkte
-- Sicheres File-Upload-System (Upload-Route für ShareX Custom Uploader)
 
 ## 💻 Entwicklung
 
@@ -102,5 +76,5 @@ docker-compose up -d
 
 Das Projekt ist für DockerCompose-basiertes Deployment optimiert 
 
-
+Live erreichbar unter: https://machinezr.de
 Kontakt: 95.schulz@googlemail.com

@@ -42,7 +42,7 @@ jobs:
             - name: Abhängigkeiten installieren und Tests ausführen
               run: |
                 npm ci
-                npm test
+                npm test -- frontend/
     
     testing-backend:
         runs-on: ubuntu-latest

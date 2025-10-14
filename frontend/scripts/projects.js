@@ -47,15 +47,6 @@ function registerEventListeners() {
       projectMaximize(project);
     }
   });
-
-  document.addEventListener("click", function (event) {
-    const fullscreenBtn = event.target.closest(".fullscreenImageBtn");
-    if (fullscreenBtn) {
-      const projectId = fullscreenBtn.id.split("-")[1];
-      const project = projectsData.find(p => p.project_id === parseInt(projectId));
-      openCarouselModal(project);
-    }
-  });
 }
 
 async function getProjects() {

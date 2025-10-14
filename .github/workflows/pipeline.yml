@@ -56,9 +56,11 @@ jobs:
                 node-version: '22'
             - name: Abhängigkeiten installieren und Tests ausführen
               run: |
+                npm ci 
                 cd backend
                 npm ci
-                npm test
+                cd ..
+                npm test -- backend/
 
     deploy:
         runs-on: ubuntu-latest

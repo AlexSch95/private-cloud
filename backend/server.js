@@ -9,6 +9,7 @@ const app = express();
 
 require("dotenv").config();
 
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -32,7 +33,10 @@ function authenticateToken(req, res, next) {
     next();
   } catch (error) {
     console.error(`Fehler in Middleware "authenticateToken": ${error}`);
-    if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+    if (
+      error.name === "TokenExpiredError" ||
+      error.name === "JsonWebTokenError"
+    ) {
       res.clearCookie("token");
     }
     if (error.message.includes("jwt malformed")) {
@@ -43,7 +47,8 @@ function authenticateToken(req, res, next) {
     }
     res.status(500).json({
       success: false,
-      message: "Es besteht ein Problem mit dem Session-Cookie. Bitte melden Sie sich erneut an oder kontaktieren Sie einen Administrator"
+      message:
+        "Es besteht ein Problem mit dem Session-Cookie. Bitte melden Sie sich erneut an oder kontaktieren Sie einen Administrator"
     });
   }
 }
@@ -68,7 +73,9 @@ app.get("/api/check-auth", authenticateToken, (req, res) => {
 app.get("/api/projects/all", async (req, res) => {
   try {
     const connection = await connectToDatabase();
-    const [result] = await connection.execute("SELECT * FROM projects ORDER BY project_id DESC;");
+    const [result] = await connection.execute(
+      "SELECT * FROM projects ORDER BY project_id DESC;"
+    );
     await connection.end();
     res.status(200).json({
       success: true,
@@ -87,11 +94,27 @@ app.get("/api/projects/all", async (req, res) => {
 // desc: Projekt hinzufügen Route
 app.post("/api/projects/add", authenticateToken, async (req, res) => {
   try {
-    const { title, description, status, readmeLink, githubLink, images, techstack } = req.body;
+    const {
+      title,
+      description,
+      status,
+      readmeLink,
+      githubLink,
+      images,
+      techstack
+    } = req.body;
     const connection = await connectToDatabase();
     const [result] = await connection.execute(
       "INSERT INTO projects (title, description, status, readmeLink, githubLink, images, techstack) VALUES (?, ?, ?, ?, ?, ?, ?);",
-      [title, description, status, readmeLink, githubLink, JSON.stringify(images), JSON.stringify(techstack)]
+      [
+        title,
+        description,
+        status,
+        readmeLink,
+        githubLink,
+        JSON.stringify(images),
+        JSON.stringify(techstack)
+      ]
     );
     await connection.end();
     res.status(201).json({
@@ -100,7 +123,10 @@ app.post("/api/projects/add", authenticateToken, async (req, res) => {
       projectId: result.insertId
     });
   } catch (error) {
-    console.error("Fehler beim Hinzufügen des Projekts (/api/projects/add):", error);
+    console.error(
+      "Fehler beim Hinzufügen des Projekts (/api/projects/add):",
+      error
+    );
     res.status(500).json({
       success: false,
       message: "Fehler beim Hinzufügen des Projekts"
@@ -132,7 +158,8 @@ app.post("/api/login", async (req, res) => {
     const connection = await connectToDatabase();
     // Überprüfe, ob Username existiert
     const [existingUsers] = await connection.execute(
-      "SELECT * FROM users WHERE user_name = ?", [username]
+      "SELECT * FROM users WHERE user_name = ?",
+      [username]
     );
     await connection.end();
     if (existingUsers.length === 0) {
@@ -154,18 +181,18 @@ app.post("/api/login", async (req, res) => {
     // Objekt erstellen, das in unserem token mit jsonwebtoken gesigned wird
     const tokenUser = {
       id: user.user_id,
-      username: user.user_name,
+      username: user.user_name
     };
     //erstellen des verschlüsselten Tokens mit jwt.sign
     const token = jwt.sign(tokenUser, secretKey, { expiresIn: "1h" });
     //antwort ans frontend inklusive des erstellten, verschlüsselten tokens
-    res.status(200)
+    res
+      .status(200)
       .cookie("token", token, { httpOnly: true, maxAge: 3600000 }) // 1 Stunde Gültigkeit
       .json({
         success: true,
-        message: `Anmeldung als ${username} erfolgreich.`,
+        message: `Anmeldung als ${username} erfolgreich.`
       });
-
   } catch (error) {
     console.error(`Fehler in Route "/api/login": ${error}`);
     res.status(500).json({
@@ -175,42 +202,44 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.post("/api/register", async (req, res) => {
-  try {
-    // Username und Passwort auslesen
-    const { username, password } = req.body;
-    if (username === undefined || password === undefined) {
-      return res.status(400).json({ error: "Username oder Passwort nicht übergeben." });
-    }
-    const connection = await connectToDatabase();
-    // Überprüfe, ob Username schon vergeben
-    const [existingUsers] = await connection.execute(
-      "SELECT * FROM users WHERE user_name = ?", [username]
-    );
-    if (existingUsers.length > 0) {
-      return res.status(500).json({
-        success: false,
-        message: "Username existiert schon."
-      });
-    }
-    // Ab hier: User erstellen
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    await connection.execute("INSERT INTO users (user_name, password_hash) VALUES (?, ?)", [username, hashedPassword]
-    );
-    await connection.end();
-    res.status(201).json({
-      success: true,
-      message: `User ${username} erfolgreich erstellt.`,
-    });
-  } catch (error) {
-    console.error(`Fehler in Route "/api/register": ${error}`);
-    return res.status(500).json({ error: "Fehler beim Erstellen des Users." });
-  }
-});
+// app.post("/api/register", async (req, res) => {
+//   try {
+//     // Username und Passwort auslesen
+//     const { username, password } = req.body;
+//     if (username === undefined || password === undefined) {
+//       return res.status(400).json({ error: "Username oder Passwort nicht übergeben." });
+//     }
+//     const connection = await connectToDatabase();
+//     // Überprüfe, ob Username schon vergeben
+//     const [existingUsers] = await connection.execute(
+//       "SELECT * FROM users WHERE user_name = ?", [username]
+//     );
+//     if (existingUsers.length > 0) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Username existiert schon."
+//       });
+//     }
+//     // Ab hier: User erstellen
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
+//     await connection.execute("INSERT INTO users (user_name, password_hash) VALUES (?, ?)", [username, hashedPassword]
+//     );
+//     await connection.end();
+//     res.status(201).json({
+//       success: true,
+//       message: `User ${username} erfolgreich erstellt.`,
+//     });
+//   } catch (error) {
+//     console.error(`Fehler in Route "/api/register": ${error}`);
+//     return res.status(500).json({ error: "Fehler beim Erstellen des Users." });
+//   }
+// });
 
+if (require.main === module) {
+  app.listen(3000, () => {
+    console.info("Backend läuft auf Port 3000");
+  });
+}
 
-
-app.listen(3000, () => {
-  console.info("Backend läuft auf Port 3000");
-});
+module.exports = app;

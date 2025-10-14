@@ -184,11 +184,6 @@ async function projectMaximize(project, container = maximizedProjectContainer) {
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Zurück</span>
                             </button>
-                            <button class="carousel-control-center position-absolute top-50 start-50 translate-middle border-0 bg-transparent text-white fs-3 fullscreenImageBtn"
-                                type="button" id="fullscreenBtn">
-                                <i class="bi bi-fullscreen shadow"></i>
-                                <span class="visually-hidden">Vollbild</span>
-                            </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel"
                                 data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -217,62 +212,6 @@ async function projectMaximize(project, container = maximizedProjectContainer) {
     container.innerHTML = "";
     getProjects();
   });
-}
-
-
-
-
-function openCarouselModal(project) {
-  const modalHtml = `
-        <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content border-0 h-100 d-flex align-items-center justify-content-center" style="background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);">
-                    <div style="width: 80vw; height: 80vh;">
-                        <div id="modalCarousel-${project.project_id}" class="carousel slide h-100">
-                            <div class="carousel-indicators">
-                                ${JSON.parse(project.images).map((_, index) => `
-                                    <button type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide-to="${index}" 
-                                        class="${index === 0 ? "active" : ""}" aria-label="Slide ${index + 1}"></button>
-                                `).join("")}
-                            </div>
-                            <div class="carousel-inner h-100">
-                                <button type="button" class="btn btn-carousel-modal position-absolute top-0 start-50 translate-middle-x mt-3" 
-                                    style="z-index: 1050;" data-bs-dismiss="modal" aria-label="Close">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                                ${JSON.parse(project.images).map((img, index) => `
-                                    <div class="carousel-item h-100 ${index === 0 ? "active" : ""}">
-                                        <div class="d-flex align-items-center justify-content-center h-100">
-                                            <img src="${img}" loading="lazy" style="max-width: 80vw; max-height: 80vh; width: auto; height: auto; object-fit: contain;" alt="Projekt Bild ${index + 1}">
-                                        </div>
-                                    </div>
-                                `).join("")}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Zurück</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#modalCarousel-${project.project_id}" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Weiter</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-  // Entferne existierendes Modal falls vorhanden
-  const existingModal = document.getElementById("carouselModal");
-  if (existingModal) {
-    existingModal.remove();
-  }
-
-  // Füge neues Modal hinzu und zeige es an
-  document.body.insertAdjacentHTML("beforeend", modalHtml);
-  const modal = new bootstrap.Modal(document.getElementById("carouselModal"));
-  modal.show();
 }
 
 export { renderProjects, projectContainer, maximizedProjectContainer, projectMaximize };

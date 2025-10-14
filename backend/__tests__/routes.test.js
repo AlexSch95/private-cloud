@@ -5,10 +5,8 @@ global.TextDecoder = TextDecoder;
 const request = require("supertest");
 
 jest.mock("../db.js", () => {
-    // execute-Mock mit zwei Aufrufen: einmal für GET, einmal für POST
     const execute = jest
         .fn()
-        // Für GET /api/projects/all
         .mockResolvedValueOnce([
             [
                 {
@@ -33,7 +31,6 @@ jest.mock("../db.js", () => {
                 }
             ]
         ])
-        // Für POST /api/projects/add
         .mockResolvedValueOnce([{ insertId: 42 }]);
     return {
         connectToDatabase: jest.fn().mockResolvedValue({

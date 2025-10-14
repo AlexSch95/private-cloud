@@ -99,6 +99,7 @@ describe("Große Projektansicht (funktion: projectMaximize)", () => {
 
     await projectMaximize(testProject, maximizedProjectContainer);
 
+    // desc: ergebnisse überprüfen
     expect(maximizedProjectContainer.querySelector("#maximizedProjectTitle")).toHaveTextContent("Test Projekt 1");
     expect(maximizedProjectContainer.querySelector("#maximizedProjectStatus")).toHaveTextContent("Abgeschlossen");
     expect(maximizedProjectContainer.querySelector("#maximizedProjectDescription")).toHaveTextContent("Mock Readme");

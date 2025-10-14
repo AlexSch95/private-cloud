@@ -2,6 +2,7 @@ name: pipeline
 
 on:
   push:
+    # desc: beschränkt den Push Trigger auf bestimmte Ordner bzw Dateien
     paths:
       - 'frontend/**'
       - 'backend/**'
@@ -55,6 +56,7 @@ jobs:
               with:
                 node-version: '22'
             - name: Abhängigkeiten installieren und Tests ausführen
+              # desc: Root Dependencies installieren (für jest) und dann Backend Dependencies (express etc)
               run: |
                 npm ci 
                 cd backend
